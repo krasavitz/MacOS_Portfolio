@@ -1,6 +1,6 @@
 import WindowWrapper from "#hoc/WindowWrapper.jsx";
 import { WindowControls } from "#components";
-import { photosLinks, gallery } from "#constants";
+import { gallery } from "#constants";
 
 const Photos = () => {
     return (
@@ -10,25 +10,21 @@ const Photos = () => {
                 <h2>Gallery</h2>
             </div>
 
-            <div className="flex bg-white">
-                <div className="sidebar">
-                    <h2>Photos</h2>
-
-                    <ul>
-                        {photosLinks.map(({ id, icon, title }) => (
-                            <li key={id}>
-                                <img src={icon} alt={title} />
-                                <p>{title}</p>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-
+            <div className="bg-[#1c1c1e]">
                 <div className="gallery">
                     <ul>
-                        {gallery.map(({ id, img }) => (
+                        {gallery.map(({ id, img, alt }) => (
                             <li key={id}>
-                                <img src={img} alt={`gallery-${id}`} />
+                                <img
+                                    src={img}
+                                    alt={alt || `gallery-${id}`}
+                                    loading="lazy"
+                                    decoding="async"
+                                    onError={(e) => {
+                                        e.currentTarget.onerror = null;
+                                        e.currentTarget.src = "/images/placeholder.svg";
+                                    }}
+                                />
                             </li>
                         ))}
                     </ul>

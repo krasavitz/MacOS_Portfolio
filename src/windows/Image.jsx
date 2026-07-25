@@ -20,7 +20,16 @@ const ImageFile = () => {
             </div>
 
             <div className="preview">
-                <img src={item.imageUrl} alt={item.name} />
+                <img
+                    src={item.imageUrl}
+                    alt={item.alt || item.name}
+                    loading="lazy"
+                    decoding="async"
+                    onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "/images/placeholder.svg";
+                    }}
+                />
             </div>
         </>
     );

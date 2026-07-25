@@ -1,7 +1,7 @@
 import WindowWrapper from "#hoc/WindowWrapper.jsx";
 import { WindowControls } from "#components";
-import { blogPosts } from "#constants";
-import { PanelLeft, ChevronLeft, ChevronRight, ShieldHalf, Search, Share, Plus, Copy, MoveRight } from "lucide-react";
+import { bookmarks } from "#constants";
+import { PanelLeft, ChevronLeft, ChevronRight, ShieldHalf, Search, Share, Plus, Copy } from "lucide-react";
 
 const Safari = () => {
     return (
@@ -33,24 +33,28 @@ const Safari = () => {
         </div>
     </div>
     
-    <div className="blog">
-        <h2>Oliver's Blog</h2>
+    <div className="bookmarks">
+        <h2>Bookmarks</h2>
+        <p className="subtitle">Brands, tools, and sites that shape how I work.</p>
 
-        <div className="space-y-8">
-            {blogPosts.map(({ id, date, title, image, link }) => (
-                <div key={id} className="blog-post">
-                    <div className="col-span-2">
-                        <img src={image} alt={title} />
+        <div className="bookmark-grid">
+            {bookmarks.map(({ id, title, host, note, link, bg }) => (
+                <a
+                    key={id}
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bookmark"
+                >
+                    <div className="tile" style={{ backgroundColor: bg }}>
+                        {title.charAt(0)}
                     </div>
-
-                    <div className="content">
-                        <p>{date}</p>
+                    <div className="bk-content">
                         <h3>{title}</h3>
-                        <a href={link} target="_blank" rel="noopener noreferrer">
-                            Check out the full post <MoveRight className="icon-hover" />
-                        </a>
+                        <p className="host">{host}</p>
+                        <p className="note">{note}</p>
                     </div>
-                </div>
+                </a>
             ))}
         </div>
     </div>

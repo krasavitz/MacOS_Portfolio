@@ -67,9 +67,14 @@ const Welcome = () => {
 
     return <section id="welcome">
         <p ref={subtitleRef}>
-            {renderText("Oliver Naumovs", "text-3xl font-georama", 100)}
+            {renderText("Oliver Naumov", "text-3xl font-georama", 100)}
         </p>
         <h1 ref={titleRef} className="mt-7">{renderText("portfolio", "text-9xl italic font-georama")}</h1>
+
+        <p className="mt-7 max-w-xl text-center text-base font-roboto text-gray-400">
+            Designer and founder. I build products, the brand around them, and the
+            growth that gets people through the door.
+        </p>
 
         <div className="small-screen">
             <p>This Portfolio is designed for desktop/tablets.</p>

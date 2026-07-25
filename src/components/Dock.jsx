@@ -78,6 +78,7 @@ const Dock = () => {
   };
 
   return (
+    <>
     <section id="dock">
       <div ref={dockRef} className="dock-container">
         {dockApps.map(({ id, name, icon, canOpen }) => (
@@ -101,10 +102,11 @@ const Dock = () => {
             </button>
           </div>
         ))}
-
-        <Tooltip id="dock-tooltip" place="top" className="tooltip" />
       </div>
     </section>
+
+    <Tooltip id="dock-tooltip" place="top" className="tooltip" />
+    </>
   );
 };
 

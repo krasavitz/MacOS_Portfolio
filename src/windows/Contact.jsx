@@ -13,6 +13,11 @@ const Contact = () => {
             <div className="p-6">
                 <h3>Let's connect</h3>
 
+                <p className="mt-3 max-w-md text-sm text-zinc-400">
+                    Reach me here:
+                    <br />
+                </p>
+
                 <ul className="mt-5">
                     {socials.map(({ id, text, icon, bg, link }) => (
                         <li key={id} style={{ backgroundColor: bg }}>

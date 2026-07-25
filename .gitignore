@@ -12,6 +12,11 @@ dist
 dist-ssr
 *.local
 
+# Raw, unoptimized source assets. Stage originals here, run
+# ./scripts/optimize-assets.sh, and commit only the optimized output.
+_raw/
+**/_raw/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

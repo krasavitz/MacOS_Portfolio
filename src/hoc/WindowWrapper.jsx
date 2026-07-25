@@ -23,7 +23,9 @@ const WindowWrapper = (Component, windowKey) => {
             const el = ref.current;
             if(!el) return;
 
-          const [instance] = Draggable.create(el, { onPress: () => focusWindow(windowKey) });
+          // zIndexBoost:false — let the store own z-index. Otherwise Draggable
+          // boosts a pressed window above newly opened ones, so files open behind.
+          const [instance] = Draggable.create(el, { onPress: () => focusWindow(windowKey), zIndexBoost: false });
           
           return () => instance.kill();
         }, [])

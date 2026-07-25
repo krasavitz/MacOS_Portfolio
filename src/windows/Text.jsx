@@ -21,7 +21,17 @@ const TextFile = () => {
 
             <div className="txt-file">
                 {item.image && (
-                    <img src={item.image} alt={item.name} className="txt-file-image" />
+                    <img
+                        src={item.image}
+                        alt={item.alt || item.name}
+                        className="txt-file-image"
+                        loading="lazy"
+                        decoding="async"
+                        onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = "/images/placeholder.svg";
+                        }}
+                    />
                 )}
 
                 {item.subtitle && (

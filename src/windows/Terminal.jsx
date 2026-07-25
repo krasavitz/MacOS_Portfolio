@@ -13,7 +13,7 @@ const Terminal = () => {
       <div className="techstack">
         <p>
           <span className="font-bold">@Oliver % </span>
-          show tech stack
+          show skills
         </p>
 
         <div className="label">
@@ -23,7 +23,7 @@ const Terminal = () => {
 
         <ul className="content">
           {techStack.map(({ category, items }) => (
-            <li key={category} className="flex items-center">
+            <li key={category} className="flex items-start">
               <Check className="check" size={20} />
               <h3>{category}</h3>
               <ul>
@@ -39,11 +39,12 @@ const Terminal = () => {
 
         <div className="footnote">
           <p>
-            <Check size={20} /> 5 of 5 stacks loaded successfully (100%)
+            <Check size={20} /> {techStack.length} of {techStack.length} groups
+            loaded successfully (100%)
           </p>
 
-          <p className="text-black">
-            <Flag size={15} fill="black" />
+          <p className="text-zinc-400">
+            <Flag size={15} fill="currentColor" />
             Render time: 6ms
           </p>
         </div>
