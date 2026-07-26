@@ -25,15 +25,25 @@ const defaultVideoTransforms = "f_auto,q_auto";
 
 /**
  * Build an optimized image URL.
+ *
+ * `version` is a cache-buster: Cloudinary serves images with a 30-day
+ * max-age, so re-uploading over an existing public ID keeps showing the old
+ * image in browsers that already cached it. Bump this to any new number
+ * (the upload's unix timestamp is the convention) to force a fresh fetch.
+ *
  * @param {string} publicId e.g. "tchpack/brand-system"
- * @param {{ width?: number, extra?: string }} [opts]
+ * @param {{ width?: number, extra?: string, version?: number|string }} [opts]
  */
-export const cldImage = (publicId, { width = 1600, extra = "" } = {}) => {
+export const cldImage = (
+  publicId,
+  { width = 1600, extra = "", version = "" } = {}
+) => {
   if (!publicId) return "";
   const t = [defaultImageTransforms, `w_${width}`, extra]
     .filter(Boolean)
     .join(",");
-  return `${BASE}/image/upload/${t}/${publicId}`;
+  const v = version ? `v${String(version).replace(/^v/, "")}/` : "";
+  return `${BASE}/image/upload/${t}/${v}${publicId}`;
 };
 
 /**

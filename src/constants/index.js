@@ -242,10 +242,31 @@ const navLinks = [
     },
   ];
 
+  // Shortcuts sitting directly on the desktop (top-right, macOS style).
+  // A shortcut opens exactly one of: `href` (new tab), `windowKey` (an app
+  // window), or `folder` (a Work subfolder name, opened in Finder). `folder`
+  // is a name rather than a reference because WORK_LOCATION is defined below.
+  const desktopShortcuts = [
+    {
+      id: "tchpack",
+      name: "tchpack.com",
+      icon: cldImage("400x400bb-75_trzm1s", { width: 128 }),
+      href: "https://tchpack.com",
+    },
+    {
+      id: "openti",
+      name: "OpenTI",
+      // version = upload timestamp of the current logo; bump on re-upload.
+      icon: cldImage("openti_app_logo_lvmecw", { width: 128, version: 1785082962 }),
+      folder: "OpenTI",
+    },
+  ];
+
   export {
     navLinks,
     navIcons,
     dockApps,
+    desktopShortcuts,
     bookmarks,
     techStack,
     socials,

@@ -8,7 +8,7 @@ body {
   overflow: hidden;
   height: 100dvh;
   background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
-    url("/images/wallpaper.png");
+    url("/images/wallpaper.gif");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -82,7 +82,63 @@ body {
   }
 
   #welcome {
-    @apply text-gray-200 flex flex-col justify-center items-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none max-sm:h-screen max-sm:w-full max-sm:px-10;
+    /* Parked bottom-left (clear of the centered dock) so open windows own the
+       middle of the desktop. Mobile still centers the small-screen notice. */
+    @apply text-gray-200 flex flex-col justify-end items-start absolute bottom-28 left-10 select-none max-sm:inset-0 max-sm:bottom-auto max-sm:left-auto max-sm:h-screen max-sm:w-full max-sm:px-10 max-sm:justify-center max-sm:items-center;
+
+    /* Terminal-style boot sequence: left-aligned mono block, typed out on load.
+       Sits directly on the animated wallpaper, so every line carries a dark
+       shadow and the block gets a soft scrim to stay legible over bright frames. */
+    .boot {
+      @apply font-roboto text-left w-[min(60vw,34rem)] max-sm:hidden;
+      @apply relative p-5 -m-5 rounded-xl;
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 18px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Radial scrim behind the text only — no hard edges against the wallpaper. */
+    .boot::before {
+      content: "";
+      @apply absolute inset-0 -z-10 rounded-xl pointer-events-none;
+      background: radial-gradient(
+        120% 100% at 0% 50%,
+        rgba(0, 0, 0, 0.55),
+        rgba(0, 0, 0, 0) 70%
+      );
+    }
+
+    .boot-header {
+      @apply flex items-center gap-3 mb-4;
+    }
+
+    .boot-path {
+      @apply text-xs tracking-[0.2em] uppercase text-gray-300;
+    }
+
+    .boot-rule {
+      @apply flex-1 h-px bg-white/25;
+    }
+
+    .boot-line {
+      @apply flex items-baseline gap-2 text-[15px] leading-7 invisible text-white;
+
+      &.is-hint {
+        @apply mt-5 text-xs tracking-[0.15em] uppercase text-gray-300;
+      }
+    }
+
+    .boot-prompt {
+      @apply text-[var(--pink)];
+    }
+
+    .boot-text {
+      &.is-muted {
+        @apply text-gray-200;
+      }
+    }
+
+    .boot-cursor {
+      @apply inline-block w-[9px] h-[15px] ml-1 translate-y-[1px] bg-[var(--pink)] invisible;
+    }
 
     .small-screen {
       @apply sm:hidden m-7 bg-red-300/20 backdrop-blur-lg p-3 rounded-md absolute top-10;
@@ -97,6 +153,26 @@ body {
      high z keeps it above open windows. */
   .tooltip {
     @apply !py-1 !px-3 !w-fit !text-center !text-xs !rounded-md !bg-[#2c2c2e] !text-white !shadow-2xl !z-[9999];
+  }
+
+  /* Desktop shortcuts, top-right under the menu bar. Below windows (z-40) so
+     an open window covers them, like the real desktop. */
+  #desktop-icons {
+    @apply absolute top-14 right-6 z-40 flex flex-col items-center gap-4 select-none max-sm:hidden;
+
+    .desktop-icon {
+      @apply w-24 flex flex-col items-center gap-1.5 p-2 rounded-lg cursor-pointer;
+      @apply hover:bg-white/10 active:bg-white/15 transition-colors;
+
+      img {
+        @apply w-14 h-14 object-contain rounded-xl shadow-lg shadow-black/40;
+      }
+
+      span {
+        @apply text-xs text-white text-center leading-tight px-1 rounded;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+      }
+    }
   }
 
   #dock {

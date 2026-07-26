@@ -1,85 +1,96 @@
 import { useRef } from 'react';
 import gsap from 'gsap';
+import { TextPlugin } from 'gsap/TextPlugin';
 import { useGSAP } from '@gsap/react';
 
-const FONT_WEIGHTS = {
-    subtitle: { min: 100, max: 400, default: 100 },
-    title: { min: 400, max: 900, default: 400 }
-};
+gsap.registerPlugin(TextPlugin);
 
-const renderText = (text, className, baseWeight = 400) => {
-    return [...text].map((char, i) => (
-        <span key={i}
-            className={className}
-            style={{ fontVariationSettings: `'wght' ${baseWeight}` }}
-        >
-            {char === " " ? "\u00A0" : char}
-        </span>
-    ));
-};
+/* Each line of the boot sequence. `type` lines are typed out character by
+   character (as if at a prompt); `out` lines are revealed whole, like command
+   output. `delay` is the pause before the line starts. */
+const SEQUENCE = [
+    { kind: 'out', text: 'Last login: welcome to my portfolio', muted: true },
+    { kind: 'type', text: 'whoami' },
+    { kind: 'out', text: 'designer · founder · builder' },
+    { kind: 'type', text: 'cat about.txt' },
+    {
+        kind: 'out',
+        text: 'I build products, the brand around them, and the growth that gets people through the door.',
+        muted: true,
+    },
+    { kind: 'hint', text: 'click an icon or open the dock to look around' },
+];
 
-const setupTextHover = (container, type) => {
-    if(!container) return () => {};
-
-    const letters = container.querySelectorAll('span');
-    const { min, max, default: base } = FONT_WEIGHTS[type];
-
-    const animateLetter= (letter, weight, duration = 0.25) => {
-        return gsap.to(letter, {duration, ease: 'power2.out', fontVariationSettings: `'wght' ${weight}`});
-    };
-
-    const handleMouseMove = (e) => {
-        const { left } = container.getBoundingClientRect();
-        const mouseX = e.clientX - left;
-
-        letters.forEach((letter) => {
-            const { left: l, width: w } = letter.getBoundingClientRect();
-            const distance = Math.abs(mouseX - (l - left + w / 2));
-            const intensity = Math.exp(-(distance ** 2) / 20000);
-
-            animateLetter(letter, min + (max - min) * intensity);
-        });
-    };
-    const handleMouseLeave = () => letters.forEach((letter) => animateLetter(letter, base, 0.3));
-
-    container.addEventListener('mousemove', handleMouseMove);
-    container.addEventListener('mouseleave', handleMouseLeave);
-
-    return () => {
-        container.removeEventListener('mousemove', handleMouseMove);
-        container.removeEventListener('mouseleave', handleMouseLeave);
-    };
-};
+const CHAR_DURATION = 0.045;
+const LINE_GAP = 0.25;
 
 const Welcome = () => {
-    const titleRef = useRef(null);
-    const subtitleRef = useRef(null);
+    const rootRef = useRef(null);
 
     useGSAP(() => {
-        const titleCleanup = setupTextHover(titleRef.current, 'title');
-        const subtitleCleanup = setupTextHover(subtitleRef.current, 'subtitle');
+        const root = rootRef.current;
+        if (!root) return;
 
-        return () => {
-            titleCleanup?.();
-            subtitleCleanup?.();
-        };
+        const lines = gsap.utils.toArray('.boot-line', root);
+        const cursor = root.querySelector('.boot-cursor');
+        const tl = gsap.timeline();
+
+        lines.forEach((line, i) => {
+            const step = SEQUENCE[i];
+            const body = line.querySelector('.boot-text');
+
+            tl.set(line, { visibility: 'visible' }, `+=${LINE_GAP}`);
+
+            if (step.kind === 'type') {
+                tl.to(body, {
+                    duration: step.text.length * CHAR_DURATION,
+                    ease: 'none',
+                    text: { value: step.text, delimiter: '' },
+                });
+            } else {
+                tl.fromTo(body, { opacity: 0, y: 4 }, { opacity: 1, y: 0, duration: 0.35 });
+            }
+        });
+
+        // Cursor parks at the end of the sequence and blinks forever.
+        tl.set(cursor, { visibility: 'visible' }).to(cursor, {
+            opacity: 0,
+            duration: 0.5,
+            ease: 'steps(1)',
+            repeat: -1,
+            yoyo: true,
+        });
+
+        return () => tl.kill();
     }, []);
 
-    return <section id="welcome">
-        <p ref={subtitleRef}>
-            {renderText("Oliver Naumov", "text-3xl font-georama", 100)}
-        </p>
-        <h1 ref={titleRef} className="mt-7">{renderText("portfolio", "text-9xl italic font-georama")}</h1>
+    return (
+        <section id="welcome">
+            <div ref={rootRef} className="boot">
+                <div className="boot-header">
+                    <span className="boot-path">~/oliver-naumov</span>
+                    <span className="boot-rule" />
+                </div>
 
-        <p className="mt-7 max-w-xl text-center text-base font-roboto text-gray-400">
-            Designer and founder. I build products, the brand around them, and the
-            growth that gets people through the door.
-        </p>
+                {SEQUENCE.map((step, i) => (
+                    <p
+                        key={i}
+                        className={`boot-line ${step.kind === 'hint' ? 'is-hint' : ''}`}
+                    >
+                        {step.kind === 'type' && <span className="boot-prompt">$</span>}
+                        <span className={`boot-text ${step.muted ? 'is-muted' : ''}`}>
+                            {step.kind === 'type' ? '' : step.text}
+                        </span>
+                        {i === SEQUENCE.length - 1 && <span className="boot-cursor" />}
+                    </p>
+                ))}
+            </div>
 
-        <div className="small-screen">
-            <p>This Portfolio is designed for desktop/tablets.</p>
-        </div>
-    </section>
+            <div className="small-screen">
+                <p>This Portfolio is designed for desktop/tablets.</p>
+            </div>
+        </section>
+    );
 };
 
 export default Welcome;
