@@ -85,10 +85,6 @@ const Welcome = () => {
                     </p>
                 ))}
             </div>
-
-            <div className="small-screen">
-                <p>This Portfolio is designed for desktop/tablets.</p>
-            </div>
         </section>
     );
 };

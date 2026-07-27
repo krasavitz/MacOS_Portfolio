@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Simple site">
+  <!-- App icon for the plain /simple site: a white page with the pink accent
+       and mono rules, mirroring how that side of the portfolio actually looks. -->
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="1" stop-color="#f1f1f1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="128" height="128" rx="28" fill="url(#paper)" />
+  <rect x="0.5" y="0.5" width="127" height="127" rx="27.5" fill="none" stroke="#e2e2e2" />
+
+  <rect x="24" y="30" width="46" height="7" rx="3.5" fill="#ff5c9d" />
+
+  <rect x="24" y="52" width="80" height="5" rx="2.5" fill="#1a1a1a" opacity="0.82" />
+  <rect x="24" y="66" width="66" height="5" rx="2.5" fill="#1a1a1a" opacity="0.5" />
+  <rect x="24" y="80" width="80" height="5" rx="2.5" fill="#1a1a1a" opacity="0.5" />
+  <rect x="24" y="94" width="40" height="5" rx="2.5" fill="#1a1a1a" opacity="0.28" />
+</svg>

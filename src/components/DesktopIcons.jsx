@@ -24,11 +24,15 @@ const DesktopIcons = () => {
 
     return (
         <section id="desktop-icons">
-            {desktopShortcuts.map((shortcut) => (
+            {desktopShortcuts.map((shortcut, i) => (
                 <button
                     key={shortcut.id}
                     type="button"
                     className="desktop-icon"
+                    // Scattered per `pos`; anything without one falls back to a
+                    // column down the right edge so new shortcuts still land
+                    // somewhere sensible.
+                    style={shortcut.pos ?? { top: `${12 + i * 14}%`, left: "84%" }}
                     onClick={() => openShortcut(shortcut)}
                     aria-label={`Open ${shortcut.name}`}
                 >

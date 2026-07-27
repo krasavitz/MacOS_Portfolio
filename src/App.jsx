@@ -1,30 +1,18 @@
-import gsap from "gsap";
-import { Draggable } from "gsap/Draggable";
+import DesktopShell from '#shells/DesktopShell.jsx';
+import MobileShell from '#mobile/MobileShell.jsx';
+import { useIsDesktop } from '#hooks/useViewport.js';
 
-import { Terminal, Safari, Resume, Finder, Text, Image, Contact, Photos, Video } from '#windows';
-import { Navbar, Welcome, Dock, DesktopIcons } from '#components';
-
-gsap.registerPlugin(Draggable);
-
+/* One of two OS experiences depending on viewport width. The desktop shell
+   assumes a mouse and draggable windows; below 1024px it would be unusable, so
+   phones and tablets get the springboard instead. */
 const App = () => {
+  const isDesktop = useIsDesktop();
+
   return (
-    <main>
-      <Navbar />
-      <Welcome />
-      <DesktopIcons />
-      <Dock />
-
-      <Terminal />
-      <Safari />
-      <Resume />
-      <Finder />
-      <Text />
-      <Image />
-      <Contact />
-      <Photos />
-      <Video />
+    <main id="os">
+      {isDesktop ? <DesktopShell /> : <MobileShell />}
     </main>
-  )
-}
+  );
+};
 
-export default App
+export default App;

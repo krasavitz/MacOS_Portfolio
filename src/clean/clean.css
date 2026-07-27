@@ -1,0 +1,558 @@
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap");
+
+/* The plain portfolio at /simple. Deliberately unlike the desktop site: light
+   ground, near-black text, no chrome, hairline rules, generous rhythm. Scoped
+   under .clean so none of it can leak into the OS experience. */
+
+.clean {
+  --ink: #101010;
+  --ink-soft: #6b6b6b;
+  --rule: #e6e6e6;
+  --paper: #ffffff;
+  --tint: #f4f4f4;
+  /* Same pink as the desktop site (--pink: #ff5c9d), darkened for links and
+     small labels so it stays legible on white; the bright value is kept for
+     tints and washes where contrast doesn't matter. */
+  --accent: #e0246f;
+  --accent-bright: #ff5c9d;
+  --accent-wash: rgba(255, 92, 157, 0.08);
+
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--paper);
+  color: var(--ink);
+  /* All mono, body copy included — the plain site's whole identity. Monospace
+     sets wider than a proportional face, so the scale drops a step and the
+     leading opens up to keep long case studies readable. */
+  font-family: "JetBrains Mono", monospace;
+  font-size: 15px;
+  line-height: 1.8;
+  -webkit-font-smoothing: antialiased;
+}
+
+.clean a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.clean a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Every link and highlight on this side is pink. */
+.clean-main a:hover,
+.clean-foot a:hover {
+  color: var(--accent);
+}
+
+.clean ::selection {
+  background: var(--accent-bright);
+  color: #ffffff;
+}
+
+.clean a:focus-visible,
+.clean button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* The masthead is a home link, not a call to action — it never underlines,
+   and it must not flash a highlight on tap. */
+.clean-mark,
+.clean-mark:hover,
+.clean-mark:active,
+.clean-mark:focus {
+  text-decoration: none;
+  outline: none;
+}
+
+.clean-mark {
+  transition: opacity 0.25s ease;
+}
+
+.clean-mark:hover {
+  opacity: 0.55;
+}
+
+.clean button,
+.clean a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- motion ---------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: calc(var(--i, 0) * 55ms);
+}
+
+.reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .clean *,
+  .clean *::before,
+  .clean *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* ---------- chrome ---------- */
+
+.clean-head,
+.clean-main,
+.clean-foot {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding-inline: 1.5rem;
+}
+
+/* Masthead and footer sit outside the reveal container, so they animate on
+   mount rather than on scroll. */
+.clean-head,
+.clean-foot {
+  animation: chrome-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.clean-foot {
+  animation-delay: 0.15s;
+}
+
+@keyframes chrome-in {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+.clean-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  align-items: baseline;
+  justify-content: space-between;
+  padding-top: 3rem;
+  padding-bottom: 2.5rem;
+}
+
+.clean-mark {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-family: "JetBrains Mono", monospace;
+}
+
+.clean-head nav {
+  display: flex;
+  gap: 1.25rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* Nav links wipe an underline in from the left instead of snapping one on. */
+.clean-head nav a {
+  position: relative;
+  padding-bottom: 2px;
+  transition: color 0.25s ease;
+}
+
+.clean-head nav a:hover {
+  text-decoration: none;
+  color: var(--accent);
+}
+
+.clean-head nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.clean-head nav a:hover::after {
+  transform: scaleX(1);
+}
+
+.clean-foot {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 5rem;
+  padding-block: 2rem 4rem;
+  border-top: 1px solid var(--rule);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- index ---------- */
+
+.clean-lede {
+  font-size: 1.1rem;
+  line-height: 1.65;
+  max-width: 34rem;
+  margin-bottom: 4rem;
+  text-wrap: balance;
+}
+
+.clean-section {
+  margin-bottom: 3.5rem;
+}
+
+/* Inside a project/about page a section follows prose, so it needs air above. */
+.clean-project .clean-section {
+  margin-top: 4.5rem;
+}
+
+.clean-section h2 {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.clean-index li {
+  border-bottom: 1px solid var(--rule);
+  transition: background-color 0.3s ease;
+}
+
+.clean-index li:hover {
+  background-color: var(--accent-wash);
+}
+
+/* A row is a link plus a strip of thumbnails — siblings, not nested, so the
+   thumbs stay independently clickable. */
+.idx-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  padding-block: 0.85rem;
+}
+
+/* Rows without a thumbnail strip (Elsewhere) carry the padding themselves. */
+.clean-index li > .idx-link {
+  padding-block: 0.85rem;
+}
+
+.idx-link {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 1.25rem;
+  min-width: 0;
+}
+
+.clean .idx-link:hover {
+  text-decoration: none;
+}
+
+.idx-name {
+  flex: 0 0 11rem;
+  font-size: 0.95rem;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.25s ease;
+}
+
+.idx-link:hover .idx-name {
+  transform: translateX(6px);
+  color: var(--accent);
+}
+
+.idx-note {
+  flex: 1 1 12rem;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  transition: opacity 0.25s ease;
+}
+
+.idx-link:hover .idx-note {
+  opacity: 0.6;
+}
+
+/* ---------- inline thumbnails ---------- */
+
+.idx-thumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+
+.idx-thumbs button {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 0.35rem;
+  overflow: hidden;
+  background: var(--tint);
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease;
+}
+
+.idx-thumbs img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.idx-thumbs button:hover {
+  transform: translateY(-4px) scale(1.12);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  z-index: 1;
+}
+
+.idx-thumbs button:hover img {
+  transform: scale(1.12);
+}
+
+.idx-thumbs button:active {
+  transform: translateY(-1px) scale(0.96);
+}
+
+/* Fan the strip in one at a time when the row appears. */
+.idx-thumbs button:nth-child(1) { transition-delay: 0ms; }
+.idx-thumbs button:nth-child(2) { transition-delay: 40ms; }
+.idx-thumbs button:nth-child(3) { transition-delay: 80ms; }
+.idx-thumbs button:nth-child(4) { transition-delay: 120ms; }
+.idx-thumbs button:nth-child(5) { transition-delay: 160ms; }
+
+/* ---------- lightbox ---------- */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: rgba(12, 12, 12, 0.92);
+  backdrop-filter: blur(6px);
+  animation: lb-fade 0.28s ease both;
+}
+
+.lightbox figure {
+  max-width: min(70rem, 92vw);
+  animation: lb-pop 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lightbox img {
+  width: 100%;
+  max-height: 78vh;
+  object-fit: contain;
+  display: block;
+  border-radius: 0.6rem;
+}
+
+.lightbox figcaption {
+  margin-top: 0.8rem;
+  text-align: center;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: #cccccc;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  color: #f6f4f0;
+  padding: 0.5rem;
+  border-radius: 999px;
+  transition: background-color 0.25s ease, transform 0.25s ease;
+}
+
+.lightbox-close:hover {
+  background: rgba(255, 255, 255, 0.14);
+  transform: rotate(90deg);
+}
+
+@keyframes lb-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes lb-pop {
+  from { opacity: 0; transform: scale(0.94) translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- project page ---------- */
+
+/* Mono sets wide, so headings drop a step and lose the negative tracking a
+   proportional face wanted. */
+.clean-project h1 {
+  font-size: 2.1rem;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+.clean-sub {
+  margin-top: 0.7rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.clean-project header {
+  padding-bottom: 2rem;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.clean-prose {
+  max-width: 34rem;
+}
+
+/* About: headshot floats beside the intro, stacks above it on a phone. */
+.about-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 2.5rem;
+}
+
+.headshot {
+  flex: 0 0 12rem;
+  width: 12rem;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: var(--tint);
+  border-radius: 0.6rem;
+  order: 2;
+  position: sticky;
+  top: 3rem;
+  /* Keeps the .reveal fade working — a bare transform transition here would
+     override it, since this rule comes later in the file. */
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.headshot:hover {
+  transform: scale(1.02);
+}
+
+@media (max-width: 720px) {
+  .about-body {
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .headshot {
+    order: 0;
+    position: static;
+    width: 9rem;
+    flex-basis: auto;
+  }
+}
+
+.clean-prose p {
+  margin-bottom: 1.35rem;
+}
+
+.clean-prose .prose-heading {
+  margin: 2.75rem 0 1rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  color: var(--accent);
+}
+
+.clean-file {
+  margin-top: 2rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+
+/* ---------- media ---------- */
+
+.clean-media {
+  display: grid;
+  gap: 2.5rem;
+  margin-top: 4rem;
+}
+
+.clean-media img,
+.clean-media video {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: var(--tint);
+  border-radius: 0.6rem;
+}
+
+.clean-media figcaption {
+  margin-top: 0.6rem;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+}
+
+.clean .video-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  aspect-ratio: 16 / 9;
+  border: 1px dashed var(--rule);
+  border-radius: 0.6rem;
+  color: var(--ink-soft);
+  font-family: "JetBrains Mono", monospace;
+  font-size: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .clean {
+    font-size: 16px;
+  }
+
+  .clean-head {
+    padding-top: 2rem;
+  }
+
+  .clean-lede {
+    font-size: 1.15rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .clean-project h1 {
+    font-size: 1.5rem;
+  }
+
+  /* Name and note stack, but the thumbnails stay on the row's own line. */
+  .idx-name {
+    flex-basis: 100%;
+  }
+
+  .idx-thumbs button {
+    width: 1.9rem;
+    height: 1.9rem;
+  }
+}

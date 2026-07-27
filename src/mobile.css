@@ -1,0 +1,242 @@
+/* iOS-style shell for phones and tablets (<1024px). Loaded from index.css.
+   Dark tokens match the desktop windows: #1c1c1e ground, #2c2c2e panels,
+   #3a3a3c borders, --pink accent. */
+
+@layer components {
+  .ios-shell {
+    @apply fixed inset-0 flex flex-col text-zinc-100 select-none;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* ---------- status bar ---------- */
+  .status-bar {
+    @apply flex items-center justify-between px-6 pt-2 pb-1 text-sm font-semibold shrink-0;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+
+    /* The wallpaper can be light at the top, so the glyphs carry their own
+       shadow rather than relying on contrast with it. */
+    .status-icons {
+      @apply flex items-center gap-1.5;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.85));
+    }
+  }
+
+  /* ---------- home screen ---------- */
+  .springboard {
+    @apply flex-1 flex flex-col justify-between min-h-0 px-6 pt-8 pb-4;
+  }
+
+  .app-grid {
+    @apply grid grid-cols-4 gap-x-4 gap-y-6 content-start;
+
+    @media (min-width: 640px) {
+      @apply grid-cols-6 gap-x-8 gap-y-9 px-6;
+    }
+  }
+
+  .app-icon {
+    @apply flex flex-col items-center gap-1.5 no-underline;
+
+    /* The icon PNGs carry their own rounded shape inside transparent margins,
+       so a box-shadow would outline the empty box instead of the artwork.
+       drop-shadow follows the alpha channel, and no radius is needed. */
+    img {
+      @apply w-[4.25rem] h-[4.25rem] object-contain;
+      @apply transition-transform active:scale-90;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.35));
+    }
+
+    span {
+      @apply text-[11px] text-white text-center leading-tight;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+    }
+  }
+
+  /* Flex, not a fixed column count, so the dock shrinks to the viewport
+     instead of overflowing on a narrow phone. */
+  .ios-dock {
+    @apply flex justify-around items-center gap-3 shrink-0 mt-6 p-3 rounded-3xl;
+    @apply bg-white/10 backdrop-blur-md;
+
+    .app-icon {
+      @apply min-w-0 shrink;
+    }
+
+    .app-icon img {
+      @apply w-[3.6rem] h-[3.6rem];
+    }
+
+    .app-icon span {
+      @apply hidden;
+    }
+  }
+
+  .home-indicator {
+    @apply mx-auto mb-2 mt-1 h-1.5 w-32 shrink-0 rounded-full bg-white/70;
+    @apply z-[60];
+  }
+
+  /* ---------- app sheet ---------- */
+  .app-sheet {
+    @apply fixed inset-0 z-50 flex flex-col bg-[#1c1c1e];
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 1.25rem);
+  }
+
+  .app-nav {
+    @apply relative flex items-center justify-center shrink-0 h-12 px-3;
+    @apply border-b border-[#3a3a3c] bg-[#1c1c1e];
+
+    h2 {
+      @apply text-base font-semibold truncate max-w-[55%];
+    }
+  }
+
+  .app-back {
+    @apply absolute left-2 flex items-center gap-0.5 text-[var(--pink)];
+    @apply text-[15px] active:opacity-60;
+  }
+
+  .app-body {
+    @apply flex-1 min-h-0 overflow-y-auto overscroll-contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ---------- grouped list (Work) ---------- */
+  .ios-list {
+    @apply divide-y divide-[#3a3a3c];
+
+    li > button {
+      @apply w-full flex items-center gap-3 px-4 py-3 text-left active:bg-white/5;
+    }
+
+    img {
+      @apply w-8 h-8 object-contain shrink-0 rounded-md;
+    }
+
+    .row-chevron {
+      @apply ml-auto shrink-0 text-zinc-500;
+    }
+  }
+
+  .row-text {
+    @apply flex flex-col min-w-0;
+  }
+
+  .row-title {
+    @apply text-[15px] truncate;
+  }
+
+  .row-sub {
+    @apply text-xs text-zinc-400 truncate;
+  }
+
+  .ios-empty {
+    @apply p-8 text-center text-sm text-zinc-400;
+  }
+
+  /* ---------- document ---------- */
+  .ios-doc {
+    @apply px-5 py-6 max-w-2xl mx-auto;
+
+    > img {
+      @apply w-full rounded-xl mb-5;
+    }
+
+    h3 {
+      @apply text-lg font-semibold mb-4;
+    }
+
+    p {
+      @apply text-[15px] leading-7 text-zinc-300 mb-4;
+    }
+
+    .prose-heading {
+      @apply text-[11px] tracking-[0.18em] text-[var(--pink)] mt-7 mb-2 font-roboto;
+    }
+  }
+
+  /* ---------- media viewers ---------- */
+  .ios-media {
+    @apply p-4 flex items-center justify-center min-h-full;
+
+    img,
+    video {
+      @apply w-full rounded-xl;
+    }
+  }
+
+  .ios-pdf {
+    @apply p-3;
+  }
+
+  .ios-download {
+    @apply flex items-center justify-center gap-2 mb-3 py-2.5 rounded-xl;
+    @apply bg-[#2c2c2e] text-sm text-zinc-200 active:opacity-70;
+  }
+
+  .ios-pdf-pages {
+    @apply flex flex-col items-center gap-3;
+  }
+
+  /* ---------- cards (Skills / Contact / Bookmarks) ---------- */
+  .ios-cards {
+    @apply p-4 flex flex-col gap-3 max-w-2xl mx-auto;
+  }
+
+  .ios-lede {
+    @apply text-sm text-zinc-400 leading-6 px-1;
+  }
+
+  .ios-card {
+    @apply rounded-2xl bg-[#2c2c2e] p-4;
+
+    h3 {
+      @apply text-sm font-semibold mb-3;
+    }
+  }
+
+  .tag-list {
+    @apply flex flex-wrap gap-2;
+
+    li {
+      @apply text-xs px-2.5 py-1 rounded-full bg-white/10 text-zinc-300;
+    }
+  }
+
+  .social-list,
+  .bookmark-list {
+    @apply rounded-2xl bg-[#2c2c2e] divide-y divide-[#3a3a3c] overflow-hidden;
+
+    a {
+      @apply flex items-center gap-3 p-3.5 active:bg-white/5;
+    }
+  }
+
+  .social-icon {
+    @apply w-9 h-9 rounded-lg flex items-center justify-center shrink-0;
+
+    img {
+      @apply w-5;
+    }
+  }
+
+  .bookmark-list .tile {
+    @apply w-9 h-9 rounded-lg flex items-center justify-center shrink-0;
+    @apply text-sm font-bold text-white;
+  }
+
+  /* ---------- gallery ---------- */
+  .ios-gallery {
+    @apply p-3 grid grid-cols-2 gap-3;
+
+    @media (min-width: 640px) {
+      @apply grid-cols-3;
+    }
+
+    img {
+      @apply w-full h-full object-cover rounded-xl aspect-square;
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import WindowWrapper from "#hoc/WindowWrapper.jsx";
 import { WindowControls } from "#components";
 import useWindowStore from "#store/window.js";
+import Prose from "#features/Prose.jsx";
 
 const TextFile = () => {
     const { windows } = useWindowStore();
@@ -38,9 +39,7 @@ const TextFile = () => {
                     <h3 className="txt-file-subtitle">{item.subtitle}</h3>
                 )}
 
-                {Array.isArray(item.description) && item.description.map((paragraph, i) => (
-                    <p key={i}>{paragraph}</p>
-                ))}
+                <Prose paragraphs={item.description} />
             </div>
         </>
     );

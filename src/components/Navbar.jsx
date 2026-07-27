@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
+import { Link } from 'react-router-dom';
 
-import { navLinks, navIcons, locations } from '#constants';
+import { navLinks, locations } from '#constants';
 import useWindowStore from '#store/window';
 import useLocationStore from '#store/location.js';
 
@@ -29,13 +30,8 @@ const Navbar = () => {
             </div>
 
             <div>
-                <ul>
-                    {navIcons.map(({ id, img}) => (
-                        <li key={id}>
-                            <img src={img} className="icon-hover" alt={`icon-${id} `} />
-                        </li>
-                    ))}
-                </ul>
+                {/* Escape hatch to the plain, linkable version of the portfolio. */}
+                <Link to="/simple" className="simple-link">Simple view</Link>
 
                 <time>{dayjs().format("ddd MMM D h:mm A")}</time>
             </div>

@@ -1,0 +1,95 @@
+import { techStack, socials, bookmarks, gallery, locations } from "#constants";
+import Prose from "#features/Prose.jsx";
+
+/* The apps that are a thin map over constants, laid out for touch:
+   stacked cards and two-column media instead of the desktop's fixed grids. */
+
+export const SkillsApp = () => (
+    <div className="ios-cards">
+        {techStack.map(({ category, items }) => (
+            <section key={category} className="ios-card">
+                <h3>{category}</h3>
+                <ul className="tag-list">
+                    {items.map((item) => (
+                        <li key={item}>{item}</li>
+                    ))}
+                </ul>
+            </section>
+        ))}
+    </div>
+);
+
+export const ContactApp = () => (
+    <div className="ios-cards">
+        <p className="ios-lede">
+            Designer and founder. The fastest way to reach me is email. The rest are below.
+        </p>
+
+        <ul className="social-list">
+            {socials.map(({ id, text, icon, bg, link }) => (
+                <li key={id}>
+                    <a href={link} target="_blank" rel="noopener noreferrer">
+                        <span className="social-icon" style={{ backgroundColor: bg }}>
+                            <img src={icon} alt="" />
+                        </span>
+                        <span>{text}</span>
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </div>
+);
+
+export const BookmarksApp = () => (
+    <div className="ios-cards">
+        <p className="ios-lede">Brands, tools, and sites that shape how I work.</p>
+
+        <ul className="bookmark-list">
+            {bookmarks.map(({ id, title, host, note, link, bg }) => (
+                <li key={id}>
+                    <a href={link} target="_blank" rel="noopener noreferrer">
+                        <span className="tile" style={{ backgroundColor: bg }}>
+                            {title.charAt(0)}
+                        </span>
+                        <span className="row-text">
+                            <span className="row-title">{title}</span>
+                            <span className="row-sub">{host}, {note}</span>
+                        </span>
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </div>
+);
+
+export const GalleryApp = () => (
+    <ul className="ios-gallery">
+        {gallery.map(({ id, img, alt }) => (
+            <li key={id}>
+                <img
+                    src={img}
+                    alt={alt || `gallery-${id}`}
+                    loading="lazy"
+                    decoding="async"
+                    onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = "/images/placeholder.svg";
+                    }}
+                />
+            </li>
+        ))}
+    </ul>
+);
+
+export const AboutApp = () => {
+    const doc = locations.about.children.find((c) => c.fileType === "txt");
+    if (!doc) return null;
+
+    return (
+        <article className="ios-doc">
+            {doc.image && <img src={doc.image} alt={doc.alt || doc.name} loading="lazy" />}
+            {doc.subtitle && <h3>{doc.subtitle}</h3>}
+            <Prose paragraphs={doc.description} />
+        </article>
+    );
+};

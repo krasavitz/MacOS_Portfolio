@@ -1,12 +1,14 @@
 import { useRef } from 'react';
-import { dockApps } from "#constants/index.js";
+import { dockApps, locations } from "#constants/index.js";
 import { Tooltip } from "react-tooltip";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import useWindowStore from "#store/window.js";
+import useLocationStore from "#store/location.js";
 
 const Dock = () => {
   const { openWindow, closeWindow, windows } = useWindowStore();
+  const { activeLocation, setActiveLocation } = useLocationStore();
   const dockRef = useRef(null);
 
   useGSAP(() => {
@@ -62,6 +64,20 @@ const Dock = () => {
   const toggleApp = (app) => {
     if(!app.canOpen) return;
 
+    // Apps backed by a location (Archive) point the Finder at it instead of
+    // owning a window. Clicking again while it's already showing closes it.
+    if(app.location) {
+      const target = locations[app.location];
+      if(!target) return;
+
+      if(windows.finder.isOpen && activeLocation?.id === target.id) {
+        return closeWindow('finder');
+      }
+
+      setActiveLocation(target);
+      return openWindow('finder');
+    }
+
     const window = windows[app.id];
 
     if(!window) {
@@ -81,7 +97,7 @@ const Dock = () => {
     <>
     <section id="dock">
       <div ref={dockRef} className="dock-container">
-        {dockApps.map(({ id, name, icon, canOpen }) => (
+        {dockApps.map(({ id, name, icon, canOpen, location }) => (
           <div key={id} className="relative flex justify-center">
             <button 
               type="button" 
@@ -91,7 +107,7 @@ const Dock = () => {
               data-tooltip-content={name}
               data-tooltip-delay-show={150}
               disabled={!canOpen}
-              onClick={() => toggleApp({id, canOpen})}
+              onClick={() => toggleApp({id, canOpen, location})}
             >
               <img 
                 src={`/images/${icon}`}

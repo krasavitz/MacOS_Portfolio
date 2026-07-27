@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && cp dist/index.html dist/404.html",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -20,6 +20,7 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-pdf": "^10.3.0",
+    "react-router-dom": "^7.18.1",
     "react-tooltip": "^5.30.0",
     "tailwind": "^4.0.0",
     "zustand": "^5.0.10"
