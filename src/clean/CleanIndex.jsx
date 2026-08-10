@@ -4,11 +4,11 @@ import CleanLayout from "#clean/CleanLayout.jsx";
 import Lightbox from "#clean/Lightbox.jsx";
 import { projects } from "#clean/projects.js";
 import { useReveal } from "#clean/useReveal.js";
-import { socials } from "#constants";
+import { socials, profile } from "#constants";
 
 const GROUPS = [
-    { key: "selected", label: "Selected work" },
-    { key: "university", label: "University" },
+    { key: "selected", label: "selected work" },
+    { key: "university", label: "university" },
 ];
 
 const CleanIndex = () => {
@@ -22,10 +22,7 @@ const CleanIndex = () => {
         <CleanLayout>
             <div ref={ref}>
                 <p className="clean-lede reveal" style={{ "--i": step++ }}>
-                    Designer and founder. I build products, the brand around them, and the
-                    growth that gets people through the door. Most recently I co-founded
-                    Tchpack, an AI platform for fashion brands, and took it from zero to
-                    $20K+ MRR with one other person.
+                    {profile.greeting}. {profile.intro}
                 </p>
 
                 {GROUPS.map(({ key, label }) => {
@@ -79,7 +76,7 @@ const CleanIndex = () => {
                 })}
 
                 <section className="clean-section">
-                    <h2 className="reveal" style={{ "--i": step++ }}>Elsewhere</h2>
+                    <h2 className="reveal" style={{ "--i": step++ }}>elsewhere</h2>
 
                     <ul className="clean-index">
                         {socials.map(({ id, text, link }) => (

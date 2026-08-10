@@ -90,7 +90,7 @@ const navLinks = [
     },
   ];
 
-  // Safari / "Bookmarks" window — brands, tools, and sites that shape the work.
+  // Safari / "Bookmarks" window — some of my favorite sites/tools i use daily.
   const bookmarks = [
     {
       id: 1,
@@ -122,7 +122,7 @@ const navLinks = [
       host: "archive.org",
       note: "The internet's library.",
       link: "https://archive.org/",
-      bg: "#2E2E2E",
+      bg: "#1F6FEB",
     },
     {
       id: 5,
@@ -136,7 +136,7 @@ const navLinks = [
 
   const techStack = [
     {
-      category: "Design",
+      category: "design",
       items: [
         "Adobe CC",
         "Figma",
@@ -148,11 +148,11 @@ const navLinks = [
       ],
     },
     {
-      category: "Development",
+      category: "development",
       items: ["HTML", "CSS", "JavaScript", "React", "Supabase", "Git"],
     },
     {
-      category: "Growth & Brand",
+      category: "growth & brand",
       items: [
         "Content strategy",
         "Paid campaigns",
@@ -162,7 +162,7 @@ const navLinks = [
       ],
     },
     {
-      category: "AI",
+      category: "ai",
       items: [
         "AI-assisted design",
         "Prompt engineering",
@@ -171,6 +171,31 @@ const navLinks = [
       ],
     },
   ];
+
+  // Single source for the portrait + short bio shown in the Finder's About
+  // pane and at the top of the Contact window.
+  const profile = {
+    name: "oliver naumov",
+    role: "designer",
+    location: "new york",
+    photo: assetUrl("Screenshot_2026-06-08_at_3.11.10_PM_je6ima"),
+    // The one-line intro, shared by the desktop welcome and the /simple lede
+    // so the two never drift apart.
+    greeting: "hey, im oliver",
+    intro:
+      "i design apps, websites, and products. i have some experience building them too. right now im working on tchpack.",
+    bio: [
+      "im oliver. i design and build apps, websites, and products, and have some experience growing them.",
+      "i got into all of this by launching a streetwear clothing brand first back in 2020. i later started OpenTI, freelancing as a designer and developer with my partner. this was able to give me alot of my own experience working for myself. ",
+      "most recently i co-founded Tchpack, an AI platform for fashion brands, and was able to grow it from zero to $20k+ mrr with one other person, owning the product design, the brand, and every growth channel.",
+      "before this i worked as an IT Specialist II, running full it support for an entire agency building: hardware, software, and network.",
+    ],
+    facts: [
+      { label: "now", value: "co-founder, tchpack" },
+      { label: "focus", value: "product · brand · growth" },
+      { label: "based", value: "new york" },
+    ],
+  };
 
   const socials = [
     {
@@ -238,7 +263,7 @@ const navLinks = [
   const desktopShortcuts = [
     {
       id: "tchpack",
-      name: "tchpack.com",
+      name: "Tchpack",
       icon: cldImage("400x400bb-75_trzm1s", { width: 128 }),
       href: "https://tchpack.com",
       pos: { top: "11%", left: "80%" },
@@ -290,6 +315,7 @@ const navLinks = [
     bookmarks,
     techStack,
     socials,
+    profile,
     gallery,
   };
 
@@ -827,15 +853,11 @@ const navLinks = [
         icon: "/images/txt.png",
         kind: "file",
         fileType: "txt",
-        subtitle: "Designer and founder",
-        image: assetUrl("Screenshot_2026-06-08_at_3.11.10_PM_je6ima"),
-        description: [
-          "I'm Oliver Naumov. I build products, the brand around them, and the growth that gets people through the door.",
-          "I got into all of this by launching my own clothing label first. That's where I learned that a product and the story around it aren't separate jobs, and it's why I still don't design one without the other.",
-          "Most recently I co-founded Tchpack, an AI platform for fashion brands, and took it from zero to $20K+ MRR with one other person, owning the product design, the brand, and every growth channel.",
-          "B.S. Informatics, Interactive User Experience, from SUNY Albany, with minors in Cybersecurity and Game Design & Development. Dean's List three times, and a CURCE Grant recipient.",
-          "Before this I worked as an IT Specialist II, running full IT support for an entire agency building: hardware, software, and network. I solved complex problems independently and delivered ahead of deadline.",
-        ],
+        subtitle: profile.role,
+        image: profile.photo,
+        // Same copy the desktop About pane and the /simple About page show —
+        // one source, so the three views can't drift.
+        description: profile.bio,
       },
     ],
   };

@@ -50,10 +50,10 @@ const CleanProject = () => {
 
     if (!project) {
         return (
-            <CleanLayout title="Not found">
-                <p className="clean-lede">No project by that name.</p>
+            <CleanLayout title="not found">
+                <p className="clean-lede">no project by that name.</p>
                 <p className="clean-file">
-                    <Link to="/simple">← All work</Link>
+                    <Link to="/simple">← all work</Link>
                 </p>
             </CleanLayout>
         );
@@ -89,7 +89,7 @@ const CleanProject = () => {
                 )}
 
                 <p className="clean-file">
-                    <Link to="/simple">← All work</Link>
+                    <Link to="/simple">← all work</Link>
                 </p>
             </article>
         </CleanLayout>

@@ -51,4 +51,33 @@ const PdfViewer = ({ file = DEFAULT_PDF, className = "resume-container", padding
     );
 };
 
+/* First-page preview of a PDF, cropped to a square file tile — the local
+   equivalent of the Cloudinary-rendered thumbnails the OpenTI PDFs use.
+   Lives here so it shares the worker setup above. Falls back to the generic
+   PDF icon if the file can't be rendered. */
+export const PdfThumb = ({ file = DEFAULT_PDF, size = 64 }) => {
+    const [failed, setFailed] = useState(false);
+
+    if (failed) return <img src="/images/pdf.png" alt="" />;
+
+    return (
+        <span className="pdf-thumb" style={{ width: size, height: size }}>
+            <Document
+                file={file}
+                loading={null}
+                error={null}
+                onLoadError={() => setFailed(true)}
+            >
+                <Page
+                    pageNumber={1}
+                    width={Math.round(size * 1.6)}
+                    renderTextLayer={false}
+                    renderAnnotationLayer={false}
+                    onRenderError={() => setFailed(true)}
+                />
+            </Document>
+        </span>
+    );
+};
+
 export default PdfViewer;

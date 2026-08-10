@@ -34,8 +34,8 @@ const Safari = () => {
     </div>
     
     <div className="bookmarks">
-        <h2>Bookmarks</h2>
-        <p className="subtitle">Brands, tools, and sites that shape how I work.</p>
+        <h2>bookmarks</h2>
+        <p className="subtitle">some of my favorite sites/tools i use daily</p>
 
         <div className="bookmark-grid">
             {bookmarks.map(({ id, title, host, note, link, bg }) => (

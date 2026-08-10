@@ -9,34 +9,34 @@ import "#clean/clean.css";
 const CleanLayout = ({ title, children }) => {
     useEffect(() => {
         document.title = title
-            ? `${title}, Oliver Naumov`
-            : "Oliver Naumov, Designer and Founder";
+            ? `${title}, oliver naumov`
+            : "oliver naumov, designer";
     }, [title]);
 
     return (
         <div className="clean">
             <header className="clean-head">
                 <Link to="/simple" className="clean-mark">
-                    Oliver Naumov
+                    oliver naumov
                 </Link>
 
                 <nav>
-                    <Link to="/simple/about">About</Link>
+                    <Link to="/simple/about">about</Link>
                     <a
                         href="/files/Oliver%20Naumov%20Resume%20July%202026.pdf"
                         target="_blank"
                         rel="noopener noreferrer"
                     >
-                        Résumé
+                        résumé
                     </a>
-                    <a href="mailto:naumovoliver@gmail.com">Email</a>
+                    <a href="mailto:naumovoliver@gmail.com">email</a>
                 </nav>
             </header>
 
             <main className="clean-main">{children}</main>
 
             <footer className="clean-foot">
-                <Link to="/">↩ Desktop version</Link>
+                <Link to="/">↩ desktop version</Link>
                 <span>© {new Date().getFullYear()}</span>
             </footer>
         </div>

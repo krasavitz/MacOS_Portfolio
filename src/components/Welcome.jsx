@@ -2,23 +2,16 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { TextPlugin } from 'gsap/TextPlugin';
 import { useGSAP } from '@gsap/react';
+import { profile } from '#constants';
 
 gsap.registerPlugin(TextPlugin);
 
-/* Each line of the boot sequence. `type` lines are typed out character by
-   character (as if at a prompt); `out` lines are revealed whole, like command
-   output. `delay` is the pause before the line starts. */
+/* The desktop intro, written as a note rather than a shell session. The first
+   line is typed out character by character; the rest fade in under it. */
 const SEQUENCE = [
-    { kind: 'out', text: 'Last login: welcome to my portfolio', muted: true },
-    { kind: 'type', text: 'whoami' },
-    { kind: 'out', text: 'designer · founder · builder' },
-    { kind: 'type', text: 'cat about.txt' },
-    {
-        kind: 'out',
-        text: 'I build products, the brand around them, and the growth that gets people through the door.',
-        muted: true,
-    },
-    { kind: 'hint', text: 'click an icon or open the dock to look around' },
+    { kind: 'type', text: profile.greeting },
+    { kind: 'out', text: profile.intro },
+    { kind: 'hint', text: 'click around' },
 ];
 
 const CHAR_DURATION = 0.045;
@@ -67,21 +60,17 @@ const Welcome = () => {
     return (
         <section id="welcome">
             <div ref={rootRef} className="boot">
-                <div className="boot-header">
-                    <span className="boot-path">~/oliver-naumov</span>
-                    <span className="boot-rule" />
-                </div>
-
                 {SEQUENCE.map((step, i) => (
                     <p
                         key={i}
-                        className={`boot-line ${step.kind === 'hint' ? 'is-hint' : ''}`}
+                        className={`boot-line ${step.kind === 'type' ? 'is-lead' : ''} ${
+                            step.kind === 'hint' ? 'is-hint' : ''
+                        }`}
                     >
-                        {step.kind === 'type' && <span className="boot-prompt">$</span>}
                         <span className={`boot-text ${step.muted ? 'is-muted' : ''}`}>
                             {step.kind === 'type' ? '' : step.text}
                         </span>
-                        {i === SEQUENCE.length - 1 && <span className="boot-cursor" />}
+                        {step.kind === 'type' && <span className="boot-cursor" />}
                     </p>
                 ))}
             </div>

@@ -22,7 +22,7 @@ export const SkillsApp = () => (
 export const ContactApp = () => (
     <div className="ios-cards">
         <p className="ios-lede">
-            Designer and founder. The fastest way to reach me is email. The rest are below.
+            designer. the fastest way to reach me is email, the rest are below.
         </p>
 
         <ul className="social-list">

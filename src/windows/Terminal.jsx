@@ -1,58 +1,47 @@
 import WindowWrapper from "#hoc/WindowWrapper.jsx";
 import { techStack } from "#constants";
-import { Check, Flag } from "lucide-react";
 import { WindowControls } from "#components";
-const Terminal = () => {
+
+const Skills = () => {
   return (
     <>
       <div id="window-header">
         <WindowControls target="terminal" />
-        <h2>Terminal</h2>
+        <h2>skills</h2>
       </div>
 
-      <div className="techstack">
-        <p>
-          <span className="font-bold">@Oliver % </span>
-          show skills
-        </p>
-
-        <div className="label">
-          <p className="w-32">Category</p>
-          <p>Technologies</p>
+      <div className="skills">
+        <div className="skills-hero">
+          <p className="eyebrow">toolkit</p>
+          <h3>skills ive picked up</h3>
         </div>
 
-        <ul className="content">
-          {techStack.map(({ category, items }) => (
-            <li key={category} className="flex items-start">
-              <Check className="check" size={20} />
-              <h3>{category}</h3>
-              <ul>
-                {items.map((item, i) => (
-                  <li key={i}>
-                    {item} {i < items.length - 1 ? "," : ""}
+        <ul className="skill-grid">
+          {techStack.map(({ category, items }, i) => (
+            <li key={category} className="skill-card">
+              <div className="card-top">
+                <span className="index">{String(i + 1).padStart(2, "0")}</span>
+                <h4>{category}</h4>
+              </div>
+
+              {/* The spaces around each slash are the only places a line is
+                  allowed to break — each entry itself stays on one line. */}
+              <ul className="skill-list">
+                {items.map((item, n) => (
+                  <li key={item}>
+                    <span className="entry">{item}</span>
+                    {n < items.length - 1 && <span className="sep">{" / "}</span>}
                   </li>
                 ))}
               </ul>
             </li>
           ))}
         </ul>
-
-        <div className="footnote">
-          <p>
-            <Check size={20} /> {techStack.length} of {techStack.length} groups
-            loaded successfully (100%)
-          </p>
-
-          <p className="text-zinc-400">
-            <Flag size={15} fill="currentColor" />
-            Render time: 6ms
-          </p>
-        </div>
       </div>
     </>
   );
 };
 
-const TerminalWindow = WindowWrapper(Terminal, 'terminal');
+const TerminalWindow = WindowWrapper(Skills, 'terminal');
 
 export default TerminalWindow;

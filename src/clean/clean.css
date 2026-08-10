@@ -147,7 +147,7 @@
 .clean-mark {
   font-size: 0.75rem;
   letter-spacing: 0.2em;
-  text-transform: uppercase;
+  text-transform: lowercase;
   font-family: "JetBrains Mono", monospace;
 }
 
@@ -157,7 +157,7 @@
   font-family: "JetBrains Mono", monospace;
   font-size: 0.75rem;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
+  text-transform: lowercase;
   color: var(--ink-soft);
 }
 
@@ -225,7 +225,7 @@
   font-family: "JetBrains Mono", monospace;
   font-size: 0.7rem;
   letter-spacing: 0.22em;
-  text-transform: uppercase;
+  text-transform: lowercase;
   color: var(--ink-soft);
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--rule);

@@ -1,21 +1,28 @@
 import WindowWrapper from "#hoc/WindowWrapper.jsx";
 import { WindowControls } from "#components";
-import { socials } from "#constants";
+import { socials, profile } from "#constants";
 
 const Contact = () => {
     return (
         <>
             <div id="window-header">
                 <WindowControls target="contact" />
-                <h2>Get in touch</h2>
+                <h2>get in touch</h2>
             </div>
 
             <div className="p-6">
-                <h3>Let's connect</h3>
+                <div className="contact-intro">
+                    <img src={profile.photo} alt={profile.name} className="contact-photo" />
+                    <div>
+                        <p className="contact-name">{profile.name}</p>
+                        <p className="contact-role">{profile.role}</p>
+                    </div>
+                </div>
 
-                <p className="mt-3 max-w-md text-sm text-zinc-400">
-                    Reach me here:
-                    <br />
+                <h3>lets connect</h3>
+
+                <p className="mt-2 mb-1 text-sm text-zinc-400">
+                    reach me here
                 </p>
 
                 <ul className="mt-5">

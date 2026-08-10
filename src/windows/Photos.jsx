@@ -7,7 +7,7 @@ const Photos = () => {
         <>
             <div id="window-header">
                 <WindowControls target="photos" />
-                <h2>Gallery</h2>
+                <h2>gallery</h2>
             </div>
 
             <div className="bg-[#1c1c1e]">

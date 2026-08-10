@@ -39,7 +39,7 @@ const TextFile = () => {
                     <h3 className="txt-file-subtitle">{item.subtitle}</h3>
                 )}
 
-                <Prose paragraphs={item.description} />
+                <Prose paragraphs={item.description} className="prose-body" />
             </div>
         </>
     );

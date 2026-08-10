@@ -97,11 +97,11 @@ body {
        middle of the desktop. Mobile still centers the small-screen notice. */
     @apply text-gray-200 flex flex-col justify-end items-start absolute bottom-28 left-10 select-none max-sm:inset-0 max-sm:bottom-auto max-sm:left-auto max-sm:h-screen max-sm:w-full max-sm:px-10 max-sm:justify-center max-sm:items-center;
 
-    /* Terminal-style boot sequence: left-aligned mono block, typed out on load.
-       Sits directly on the animated wallpaper, so every line carries a dark
-       shadow and the block gets a soft scrim to stay legible over bright frames. */
+    /* A short typed intro, not a shell session. Sits directly on the animated
+       wallpaper, so every line carries a dark shadow and the block gets a soft
+       scrim to stay legible over bright frames. */
     .boot {
-      @apply font-roboto text-left w-[min(60vw,34rem)] max-sm:hidden;
+      @apply text-left w-[min(60vw,34rem)] max-sm:hidden;
       @apply relative p-5 -m-5 rounded-xl;
       text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 18px rgba(0, 0, 0, 0.6);
     }
@@ -117,28 +117,16 @@ body {
       );
     }
 
-    .boot-header {
-      @apply flex items-center gap-3 mb-4;
-    }
-
-    .boot-path {
-      @apply text-xs tracking-[0.2em] uppercase text-gray-300;
-    }
-
-    .boot-rule {
-      @apply flex-1 h-px bg-white/25;
-    }
-
     .boot-line {
-      @apply flex items-baseline gap-2 text-[15px] leading-7 invisible text-white;
+      @apply flex items-baseline gap-2 text-[15px] leading-7 invisible text-gray-200;
+
+      &.is-lead {
+        @apply text-3xl leading-tight font-semibold text-white mb-3;
+      }
 
       &.is-hint {
-        @apply mt-5 text-xs tracking-[0.15em] uppercase text-gray-300;
+        @apply mt-5 text-xs text-gray-300;
       }
-    }
-
-    .boot-prompt {
-      @apply text-[var(--pink)];
     }
 
     .boot-text {
@@ -148,7 +136,7 @@ body {
     }
 
     .boot-cursor {
-      @apply inline-block w-[9px] h-[15px] ml-1 translate-y-[1px] bg-[var(--pink)] invisible;
+      @apply inline-block w-[10px] h-[22px] ml-1 translate-y-[2px] bg-[var(--pink)] invisible;
     }
   }
 
@@ -268,53 +256,75 @@ body {
     }
   }
 
+  /* "Skills" window. Keeps the #terminal id (that's its key in the window
+     store) but reads as an editorial card grid, not a shell. */
   #terminal {
-    @apply w-xl absolute top-32 left-1/12 bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply w-3xl max-w-[92vw] absolute top-28 left-1/12 bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
 
     h2 {
       @apply font-bold text-sm text-center w-full;
     }
 
-    .techstack {
-      @apply text-sm font-roboto p-5 text-zinc-300;
+    .skills {
+      @apply p-7 max-h-[74vh] overflow-y-auto bg-[#1c1c1e];
+    }
 
-      .label {
-        @apply flex items-center ms-10 mt-7;
+    .skills-hero {
+      @apply mb-7;
+
+      .eyebrow {
+        @apply font-roboto text-[10px] tracking-[0.35em] text-[var(--pink)] mb-3;
       }
 
-      .content {
-        @apply py-5 my-5 border-y border-dashed border-[#3a3a3c] space-y-3;
+      h3 {
+        @apply text-2xl font-semibold text-zinc-100 leading-tight tracking-tight;
+      }
+    }
 
-        > li {
-          @apply flex items-start;
+    .skill-grid {
+      @apply grid grid-cols-2 gap-3 max-sm:grid-cols-1;
+    }
 
-          .check {
-            @apply text-[#ff5c9d] w-5 shrink-0 mt-0.5;
-          }
+    /* Uniform hairline on all four sides — no heavier accent edge. */
+    .skill-card {
+      @apply relative rounded-xl p-4 bg-white/[0.03] min-w-0;
+      @apply transition-colors duration-300 hover:bg-white/[0.06];
+      border: 1px solid color-mix(in srgb, var(--pink) 25%, transparent);
 
-          h3 {
-            @apply font-semibold text-[#ff5c9d] w-28 ms-5 shrink-0;
-          }
+      &:hover {
+        border-color: color-mix(in srgb, var(--pink) 50%, transparent);
+      }
 
-          ul {
-            @apply flex flex-wrap items-center gap-x-3 gap-y-1 flex-1 min-w-0;
+      .card-top {
+        @apply flex items-baseline gap-3 mb-3;
+      }
 
-            li {
-              @apply whitespace-nowrap;
-            }
-          }
+      .index {
+        @apply font-roboto text-[11px] tracking-widest text-[var(--pink)];
+      }
+
+      h4 {
+        @apply text-base font-semibold text-zinc-100;
+      }
+
+      /* Running slash-separated line instead of tag chips. Inline (not flex)
+         so entries flow and fill each line like text — a flex row wraps one
+         item per line as soon as the entries get long. */
+      .skill-list {
+        @apply block text-[13px] leading-relaxed text-zinc-400;
+
+        li {
+          @apply inline;
         }
-      }
 
-      .footnote {
-        @apply text-[#ff5c9d] space-y-1;
+        /* Only the entry is unbreakable; the separator's spaces stay live so
+           lines can wrap between entries. */
+        .entry {
+          @apply whitespace-nowrap;
+        }
 
-        p {
-          @apply flex items-center;
-
-          svg {
-            @apply w-5 me-5;
-          }
+        .sep {
+          color: color-mix(in srgb, var(--pink) 55%, transparent);
         }
       }
     }
@@ -329,6 +339,22 @@ body {
 
     h3 {
       @apply text-xl font-semibold text-zinc-100;
+    }
+
+    .contact-intro {
+      @apply flex items-center gap-4 mb-6;
+
+      .contact-photo {
+        @apply size-20 shrink-0 rounded-full object-cover object-center shadow-lg shadow-black/40;
+      }
+
+      .contact-name {
+        @apply text-base font-semibold text-zinc-100;
+      }
+
+      .contact-role {
+        @apply mt-0.5 font-roboto text-[10px] tracking-[0.2em] text-[var(--pink)];
+      }
     }
 
     ul {
@@ -471,11 +497,79 @@ body {
       }
     }
 
+    /* About isn't a file grid — it's a profile card: circular portrait,
+       name, then the bio underneath. */
+    .about-pane {
+      @apply flex-1 min-h-0 overflow-y-auto bg-[#1c1c1e] px-10 py-9;
+
+      .about-head {
+        @apply flex items-center gap-5;
+      }
+
+      .about-photo {
+        @apply size-28 shrink-0 rounded-full object-cover object-center shadow-xl shadow-black/50;
+      }
+
+      h2 {
+        @apply text-2xl font-semibold text-zinc-100 tracking-tight;
+      }
+
+      .about-role {
+        @apply mt-1 font-roboto text-[11px] tracking-[0.2em] text-[var(--pink)];
+      }
+
+      /* Label/value rows rather than chips — reads as a masthead credit block. */
+      .about-meta {
+        @apply mt-7 max-w-lg space-y-2;
+
+        > div {
+          @apply flex items-baseline gap-4;
+        }
+
+        dt {
+          @apply w-16 shrink-0 font-roboto text-[10px] tracking-widest text-zinc-500;
+        }
+
+        dd {
+          @apply text-sm text-zinc-200;
+        }
+      }
+
+      .about-bio {
+        @apply mt-7 max-w-lg space-y-3 text-sm leading-relaxed text-zinc-400;
+
+        p:first-child {
+          @apply text-base leading-relaxed text-zinc-200;
+        }
+      }
+    }
+
+    /* Scroll container. Holds one grid, or — at the Work root — a primary
+       grid plus a labelled University group beneath it. */
     .content {
-      @apply flex-1 min-h-0 p-8 bg-[#1c1c1e] grid grid-cols-3 auto-rows-min gap-x-6 gap-y-8 content-start overflow-y-auto text-zinc-200;
+      @apply flex-1 min-h-0 p-8 bg-[#1c1c1e] overflow-y-auto text-zinc-200;
+    }
+
+    /* Section label separating the University folders from the rest of Work. */
+    .group-label {
+      @apply mt-9 mb-5 flex items-center gap-3;
+      @apply font-roboto text-[10px] tracking-[0.25em] text-zinc-500;
+
+      &::after {
+        content: "";
+        @apply flex-1 h-px bg-[#3a3a3c];
+      }
+    }
+
+    /* Narrow columns packed to the left, so the first tile's icon starts on
+       the same left edge as the "University" label rather than floating in
+       the middle of a wide third-of-the-pane column. */
+    .file-grid {
+      @apply grid auto-rows-min gap-x-5 gap-y-7 content-start justify-start;
+      grid-template-columns: repeat(auto-fill, minmax(0, 7rem));
 
       li {
-        @apply flex items-center flex-col gap-2 cursor-pointer;
+        @apply flex items-start flex-col gap-2 cursor-pointer;
 
         img {
           @apply object-contain object-center size-16 transition-transform hover:scale-105;
@@ -485,8 +579,24 @@ body {
           @apply object-cover rounded-md shadow-sm bg-zinc-800;
         }
 
+        /* Locally rendered PDF first page, cropped square from the top so the
+           document's header is what shows — matches the Cloudinary thumbs. */
+        .pdf-thumb {
+          @apply block shrink-0 overflow-hidden rounded-md shadow-sm bg-white;
+          @apply transition-transform hover:scale-105;
+
+          canvas {
+            @apply block;
+          }
+
+          .react-pdf__Document,
+          .react-pdf__Page {
+            @apply bg-transparent;
+          }
+        }
+
         p {
-          @apply text-sm text-center font-medium w-full break-words line-clamp-2;
+          @apply text-sm text-left font-medium w-full break-words line-clamp-2 leading-snug;
         }
       }
     }
@@ -508,6 +618,30 @@ body {
 
       .txt-file-subtitle {
         @apply text-lg font-semibold text-zinc-100;
+      }
+
+      /* Prose renders its own wrapper, so the outer space-y never reached the
+         paragraphs inside it — they ran together as one block. */
+      .prose-body {
+        @apply space-y-3;
+      }
+
+      /* Section markers inside a case study (OVERVIEW, ROLE, …). The bangs
+         beat the container's space-y, which would otherwise flatten every
+         section into the same rhythm as the body copy. */
+      .prose-heading {
+        @apply flex items-center gap-3 !mt-8 !mb-3 lowercase;
+        @apply font-roboto text-[10px] tracking-[0.25em] text-[var(--pink)];
+
+        &::after {
+          content: "";
+          @apply flex-1 h-px bg-[#3a3a3c];
+        }
+      }
+
+      /* First section sits right under the subtitle — no extra gap. */
+      .prose-heading:first-child {
+        @apply !mt-2;
       }
     }
   }

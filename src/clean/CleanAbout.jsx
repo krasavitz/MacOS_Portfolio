@@ -9,10 +9,10 @@ const CleanAbout = () => {
     const ref = useReveal();
 
     return (
-    <CleanLayout title="About">
+    <CleanLayout title="about">
         <article className="clean-project" ref={ref}>
             <header>
-                <h1 className="reveal" style={{ "--i": 0 }}>About</h1>
+                <h1 className="reveal" style={{ "--i": 0 }}>about</h1>
                 {aboutDoc?.subtitle && (
                     <p className="clean-sub reveal" style={{ "--i": 1 }}>{aboutDoc.subtitle}</p>
                 )}
@@ -38,7 +38,7 @@ const CleanAbout = () => {
             </div>
 
             <section className="clean-section">
-                <h2 className="reveal">Toolkit</h2>
+                <h2 className="reveal">toolkit</h2>
 
                 <ul className="clean-index">
                     {techStack.map(({ category, items }, i) => (
@@ -53,7 +53,7 @@ const CleanAbout = () => {
             </section>
 
             <p className="clean-file">
-                <Link to="/simple">← All work</Link>
+                <Link to="/simple">← all work</Link>
             </p>
         </article>
     </CleanLayout>
