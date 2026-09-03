@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="41 63 470 470">
+<svg id="Layer_2" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" viewBox="55 77 442 442">
   <style>
     /* A browser tab strip is light in light mode and dark in dark mode, so a
        single fixed colour disappears for half the visitors. An SVG favicon can
        answer both. Safari's handling of this is inconsistent, but it falls back
        to the declared fill — black — which suits its light tab strip anyway. */
-    .mark { fill: #231f20; }
-    @media (prefers-color-scheme: dark) { .mark { fill: #fff; } }
+    .mark { fill: #231f20; stroke: #231f20; stroke-width: 12; stroke-linejoin: round; }
+    @media (prefers-color-scheme: dark) { .mark { fill: #fff; stroke: #fff; stroke-width: 12; stroke-linejoin: round; } }
   </style>
 
 
