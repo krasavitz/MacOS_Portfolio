@@ -8,11 +8,30 @@ body {
   width: 100dvw;
   overflow: hidden;
   height: 100dvh;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
-    url("/images/wallpaper.gif");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+}
+
+/* The fallback colour behind the wallpaper video — shown while it buffers and
+   if it never plays. It belongs on `html`, not `body`: the wallpaper sits at a
+   negative z-index, and a negative-z-index descendant paints *before*
+   block-level element backgrounds, so an opaque `body` background covers the
+   video entirely. On `html` it becomes the canvas background instead, which is
+   painted first and therefore stays behind it. */
+html {
+  background-color: #101014;
+}
+
+/* Behind every shell, covering the viewport like `background-size: cover`.
+   The scrim is a later sibling of the video so it always paints over it. */
+.wallpaper {
+  @apply fixed inset-0 -z-10 pointer-events-none bg-[#101014];
+
+  video {
+    @apply w-full h-full object-cover;
+  }
+
+  .wallpaper-scrim {
+    @apply absolute inset-0 bg-black/45;
+  }
 }
 
 @theme {
@@ -52,9 +71,9 @@ body {
   #os nav {
     @apply flex justify-between items-center bg-black/40 backdrop-blur-3xl p-2 px-5 select-none text-zinc-100;
 
-    /* Nav logo + status icons ship as dark artwork; invert so they read on the dark bar. */
+    /* The mark's viewBox is cropped to the artwork, so this is its real size. */
     img {
-      @apply invert;
+      @apply w-6 h-6 shrink-0;
     }
 
     div {

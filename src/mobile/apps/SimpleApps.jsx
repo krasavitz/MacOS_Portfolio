@@ -4,11 +4,22 @@ import Prose from "#features/Prose.jsx";
 /* The apps that are a thin map over constants, laid out for touch:
    stacked cards and two-column media instead of the desktop's fixed grids. */
 
+/* The same content as the desktop skills window ([Terminal.jsx](../../windows/Terminal.jsx)):
+   its hero and numbered categories, stacked for a phone rather than gridded. */
 export const SkillsApp = () => (
     <div className="ios-cards">
-        {techStack.map(({ category, items }) => (
+        <header className="ios-hero">
+            <p className="eyebrow">toolkit</p>
+            <h2>skills ive picked up</h2>
+        </header>
+
+        {techStack.map(({ category, items }, i) => (
             <section key={category} className="ios-card">
-                <h3>{category}</h3>
+                <div className="card-top">
+                    <span className="index">{String(i + 1).padStart(2, "0")}</span>
+                    <h3>{category}</h3>
+                </div>
+
                 <ul className="tag-list">
                     {items.map((item) => (
                         <li key={item}>{item}</li>

@@ -284,7 +284,7 @@ const navLinks = [
     { id: "work", name: "Work", icon: "/images/finder.png", app: "work", dock: true },
     { id: "gallery", name: "Gallery", icon: "/images/photos.png", app: "gallery", dock: true },
     { id: "about", name: "About", icon: "/images/txt.png", app: "about" },
-    { id: "skills", name: "Skills", icon: "/images/terminal.png", app: "skills" },
+    { id: "skills", name: "Skills", icon: "/images/terminal.png", app: "skills", dock: true },
     { id: "bookmarks", name: "Bookmarks", icon: "/images/safari.png", app: "bookmarks" },
     { id: "resume", name: "Resume", icon: "/images/pdf.png", app: "resume", dock: true },
     {

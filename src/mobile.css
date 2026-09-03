@@ -10,15 +10,32 @@
   }
 
   /* ---------- status bar ---------- */
+  /* Matches the desktop menu bar's chrome (#os nav in index.css): the same
+     translucent black and blur, so the two shells read as one product. The
+     bar supplies its own contrast, so nothing here needs a text shadow to
+     survive a light patch of wallpaper. */
   .status-bar {
-    @apply flex items-center justify-between px-6 pt-2 pb-1 text-sm font-semibold shrink-0;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    @apply flex items-center justify-between shrink-0 px-4 py-1.5;
+    @apply bg-black/40 backdrop-blur-3xl text-sm text-zinc-100;
 
-    /* The wallpaper can be light at the top, so the glyphs carry their own
-       shadow rather than relying on contrast with it. */
+    .status-identity {
+      @apply flex items-center gap-1.5 min-w-0;
+
+      img {
+        @apply w-5 h-5 shrink-0;
+      }
+
+      p {
+        @apply font-bold truncate;
+      }
+    }
+
     .status-icons {
-      @apply flex items-center gap-1.5;
-      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.85));
+      @apply flex items-center gap-1.5 shrink-0;
+
+      time {
+        @apply font-medium mr-1;
+      }
     }
   }
 
@@ -60,11 +77,14 @@
     @apply bg-white/10 backdrop-blur-md;
 
     .app-icon {
-      @apply min-w-0 shrink;
+      @apply min-w-0 flex-1;
     }
 
+    /* The icon shrinks with its slot rather than sitting at a fixed size:
+       with five apps docked, fixed 3.6rem icons overflow a narrow phone and
+       the last one is clipped off the edge. 3.6rem is the cap, not the size. */
     .app-icon img {
-      @apply w-[3.6rem] h-[3.6rem];
+      @apply w-full max-w-[3.6rem] h-auto aspect-square mx-auto;
     }
 
     .app-icon span {
@@ -189,11 +209,39 @@
     @apply text-sm text-zinc-400 leading-6 px-1;
   }
 
+  /* Section intro above a stack of cards — the phone's answer to a desktop
+     window's hero block. */
+  .ios-hero {
+    @apply pb-1;
+
+    .eyebrow {
+      @apply text-[11px] uppercase tracking-[0.2em] text-[var(--pink)] mb-1;
+    }
+
+    h2 {
+      @apply text-2xl font-semibold leading-tight;
+    }
+  }
+
   .ios-card {
     @apply rounded-2xl bg-[#2c2c2e] p-4;
 
     h3 {
       @apply text-sm font-semibold mb-3;
+    }
+
+    /* A numbered header keeps the card headings in step with the desktop's
+       skill grid; the number replaces the margin the bare h3 carried. */
+    .card-top {
+      @apply flex items-baseline gap-2 mb-3;
+
+      .index {
+        @apply text-[11px] font-mono text-zinc-500;
+      }
+
+      h3 {
+        @apply mb-0;
+      }
     }
   }
 

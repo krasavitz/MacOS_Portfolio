@@ -1,6 +1,19 @@
 import { ChevronRight, ArrowUpRight } from "lucide-react";
 import { locations } from "#constants";
 import useMobileStore from "#store/mobile.js";
+import { cldThumbFromUrl } from "#utils/cloudinary.js";
+
+/* The row icon, matching the desktop Finder ([Finder.jsx](../../windows/Finder.jsx)):
+   images, PDFs and videos show a real preview — an image's own asset, a PDF's
+   first page, a video's poster frame — and everything else its file-type art.
+   `item.icon` alone is the generic art for those three, so a row rendered
+   straight from it shows a page glyph where a thumbnail belongs. */
+const rowThumb = (item) => {
+    const { fileType } = item;
+    if (fileType === "img") return cldThumbFromUrl(item.imageUrl, 96);
+    if (fileType === "pdf" || fileType === "video") return cldThumbFromUrl(item.icon, 96);
+    return item.icon;
+};
 
 /* Finder as an iOS grouped list. Drilling into a folder pushes another
    WorkApp onto the mobile stack, so the sheet's Back button is the only
@@ -30,7 +43,17 @@ const WorkApp = ({ entry }) => {
             {children.map((item) => (
                 <li key={`${item.kind}-${item.id}-${item.name}`}>
                     <button type="button" onClick={() => openItem(item)}>
-                        <img src={item.icon} alt="" loading="lazy" />
+                        <img
+                            src={rowThumb(item)}
+                            alt=""
+                            loading="lazy"
+                            // A preview that 404s falls back to the file-type
+                            // art rather than leaving a broken-image glyph.
+                            onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = item.icon;
+                            }}
+                        />
 
                         <span className="row-text">
                             <span className="row-title">{item.name}</span>

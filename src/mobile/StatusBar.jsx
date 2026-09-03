@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { Wifi, BatteryMedium, SignalHigh } from "lucide-react";
 
-/* iOS status bar. The clock ticks — unlike the desktop menu bar's, which is
-   rendered once at mount ([Navbar.jsx](../components/Navbar.jsx)). */
+/* The mobile menu bar. Deliberately the desktop's bar rather than a plain iOS
+   status bar ([Navbar.jsx](../components/Navbar.jsx)): same translucent black
+   chrome, same mark and wordmark on the left, clock on the right. The carrier/wifi/
+   battery glyphs stay, since the shell around it is still iOS.
+
+   The clock ticks — unlike the desktop's, which is rendered once at mount. */
 const StatusBar = () => {
     const [now, setNow] = useState(() => dayjs());
 
@@ -14,9 +18,13 @@ const StatusBar = () => {
 
     return (
         <div className="status-bar">
-            <time>{now.format("h:mm")}</time>
+            <div className="status-identity">
+                <img src="/images/oliver-logo.svg" alt="" />
+                <p>Oliver's Portfolio</p>
+            </div>
 
             <div className="status-icons">
+                <time>{now.format("h:mm")}</time>
                 <SignalHigh size={16} />
                 <Wifi size={15} />
                 <BatteryMedium size={18} />
