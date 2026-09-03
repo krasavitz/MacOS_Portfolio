@@ -375,34 +375,29 @@ body {
   }
 
   #photos {
-    @apply max-w-3xl absolute top-96 left-1/2 -translate-y-1/2 bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply w-[40rem] max-w-[92vw] h-[85vh] absolute top-16 left-1/2 -translate-x-1/2 bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
 
+    #window-header {
+      @apply shrink-0;
+    }
+
+    /* A mosaic of thumbnails rather than a full-width feed: tiles vary in size
+       but are placed explicitly (see #utils/mosaic.js) into a 6-column grid
+       that they tile exactly, so there are no holes and the edges stay flush.
+       Thumbnails crop to fill their tile; clicking one opens the whole image,
+       at full size, in the image window. */
     .gallery {
-      @apply p-5;
+      @apply flex-1 min-h-0 overflow-y-auto p-5;
 
       ul {
-        @apply grid grid-cols-5 grid-rows-5 gap-2.5;
+        @apply grid grid-cols-6 grid-flow-row-dense auto-rows-[3.25rem] gap-3;
 
-        li {
-          img {
-            @apply size-full object-cover rounded-lg;
-          }
+        li button {
+          @apply block w-full h-full cursor-pointer overflow-hidden rounded-lg;
+        }
 
-          &:first-child {
-            @apply row-start-1 row-span-3 col-start-1 col-span-3;
-          }
-
-          &:nth-child(2) {
-            @apply row-start-1 row-span-3 col-start-4 col-span-2;
-          }
-
-          &:nth-child(3) {
-            @apply row-start-4 row-span-2 col-start-3 col-span-3;
-          }
-
-          &:last-child {
-            @apply row-start-4 row-span-2 col-start-1 col-span-2;
-          }
+        img {
+          @apply w-full h-full object-cover transition-transform duration-300 hover:scale-105;
         }
       }
     }
@@ -561,15 +556,15 @@ body {
       }
     }
 
-    /* Narrow columns packed to the left, so the first tile's icon starts on
-       the same left edge as the "University" label rather than floating in
-       the middle of a wide third-of-the-pane column. */
+    /* Narrow columns packed to the left, so tiles fill from the left edge
+       rather than spreading across wide thirds-of-the-pane columns. Icon and
+       label are centered within each column, macOS-style. */
     .file-grid {
       @apply grid auto-rows-min gap-x-5 gap-y-7 content-start justify-start;
       grid-template-columns: repeat(auto-fill, minmax(0, 7rem));
 
       li {
-        @apply flex items-start flex-col gap-2 cursor-pointer;
+        @apply flex items-center flex-col gap-2 cursor-pointer;
 
         img {
           @apply object-contain object-center size-16 transition-transform hover:scale-105;
@@ -596,7 +591,7 @@ body {
         }
 
         p {
-          @apply text-sm text-left font-medium w-full break-words line-clamp-2 leading-snug;
+          @apply text-sm text-center font-medium w-full break-words line-clamp-2 leading-snug;
         }
       }
     }

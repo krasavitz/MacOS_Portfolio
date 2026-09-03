@@ -229,28 +229,25 @@ const navLinks = [
     },
   ];
 
+  // Older personal / streetwear-era work.
   const gallery = [
-    {
-      id: 1,
-      img: assetUrl("kurilaptop_zzsl09"),
-      alt: "KuriTech brand and product on laptop",
-    },
-    {
-      id: 2,
-      img: assetUrl("66ada536451b28ec91f96a0c_K_URI_grp7br"),
-      alt: "KuriTech brand identity",
-    },
-    {
-      id: 3,
-      img: assetUrl("moulton_lx9f4h"),
-      alt: "Moulton client work",
-    },
-    {
-      id: 4,
-      img: assetUrl("661b0af90e5f306f0b0346d1_rwf_ti3dnq"),
-      alt: "KuriTech brand application",
-    },
-  ];
+    { name: "Textures", id: "textures_d7w8h9" },
+    { name: "Hoodie", id: "hoodie_tiwi3r" },
+    { name: "Basquiat", id: "basquiat_d7adja" },
+    { name: "Undercvr", id: "undercvr_wvjnxk" },
+    { name: "Side Effect", id: "sideffect_q1ci4r" },
+    { name: "Unifrm", id: "unifrm_xzw4fa" },
+    { name: "Scene", id: "scene_zygj34" },
+    { name: "Movement 17", id: "movement17_qojdyj" },
+    { name: "Remember", id: "remember..._fqsutg" },
+    { name: "Me", id: "me_uuum01" },
+    { name: "Moscow", id: "moscow_n9gpyp" },
+  ].map((a, i) => ({
+    id: i + 1,
+    name: a.name,
+    img: assetUrl(a.id),
+    alt: a.name,
+  }));
 
   // Shortcuts sitting directly on the desktop. A shortcut opens exactly one of:
   // `href` (new tab), `windowKey` (an app window), or `folder` (a Work
@@ -368,6 +365,40 @@ const navLinks = [
             // TODO: confirm the public Tchpack URL
             href: "https://tchpack.com",
           },
+          {
+            id: 9,
+            name: "Tchpack Brand Guidelines.pdf",
+            icon: cldImage("Tchpack_Brand_Guidelines_ie61rc", { width: 256 }),
+            kind: "file",
+            fileType: "pdf",
+            pdfUrl: cldPdf("Tchpack_Brand_Guidelines_ie61rc"),
+            alt: "Tchpack brand guidelines",
+          },
+          ...[
+            // Public ID differs from the display name shown in Cloudinary
+            // ("Tchpack App Logo"); the ID is what the URL needs.
+            { name: "Tchpack App Logo", id: "400x400bb-75_trzm1s" },
+            { name: "Tchpack Logo White", id: "TchpackLogoWhite_dpyoqj" },
+            { name: "Tchpack Logo Text", id: "TchpackLogoText_avsgk0" },
+            { name: "Tchpack Black", id: "TchpackBlack_x9dkhs" },
+            { name: "Spikes Logo Black", id: "SpikesLogoBlack_fu1k2s" },
+            { name: "Tchpack Desktop", id: "tchpack_desktop_txbts3" },
+            { name: "App Store Phone 1", id: "App_Store_Phone_1_nyr7o8" },
+            { name: "App Store Phone 2", id: "App_Store_Phone_2_xhetyw" },
+            { name: "App Store Phone 3", id: "App_Store_Phone_3_h0ezgm" },
+            { name: "App Store Phone 4", id: "App_Store_Phone_4_bvrwwf" },
+            { name: "App Store Phone 5", id: "App_Store_Phone_5_uwkaht" },
+            { name: "Tchpack UI 1", id: "google_ads_story_1_qlalbv" },
+            { name: "Tchpack UI 2", id: "google_ads_story_2_czjvqi" },
+          ].map((a, i) => ({
+            id: 100 + i,
+            name: a.name,
+            icon: "/images/image.png",
+            kind: "file",
+            fileType: "img",
+            imageUrl: assetUrl(a.id),
+            alt: a.name,
+          })),
         ],
       },
 
@@ -885,6 +916,7 @@ const navLinks = [
     name: "Archive",
     icon: "/icons/trash.svg",
     kind: "folder",
+    // Empty — the archive images now live in the Gallery (see `gallery`).
     children: [],
   };
 
