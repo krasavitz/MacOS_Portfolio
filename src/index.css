@@ -25,8 +25,15 @@ html {
 .wallpaper {
   @apply fixed inset-0 -z-10 pointer-events-none bg-[#101014];
 
-  video {
+  video,
+  img {
     @apply w-full h-full object-cover;
+  }
+
+  /* `hidden` on the video must actually hide it — the object-cover rule above
+     would otherwise give the hidden element a box again. */
+  video[hidden] {
+    @apply !hidden;
   }
 
   .wallpaper-scrim {
