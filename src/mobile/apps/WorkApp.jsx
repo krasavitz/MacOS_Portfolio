@@ -15,6 +15,15 @@ const rowThumb = (item) => {
     return item.icon;
 };
 
+/* The local, always-available art for a row, used when a remote preview fails.
+   `item.icon` is not a safe fallback for previews: for a PDF or a video it is
+   itself the Cloudinary URL the thumbnail was derived from. */
+const localIcon = ({ fileType, icon }) => {
+    if (fileType === "pdf") return "/images/pdf.png";
+    if (fileType === "img" || fileType === "video") return "/images/image.png";
+    return icon?.startsWith("/") ? icon : "/images/placeholder.svg";
+};
+
 /* Finder as an iOS grouped list. Drilling into a folder pushes another
    WorkApp onto the mobile stack, so the sheet's Back button is the only
    navigation needed — no separate breadcrumb. */
@@ -47,11 +56,14 @@ const WorkApp = ({ entry }) => {
                             src={rowThumb(item)}
                             alt=""
                             loading="lazy"
-                            // A preview that 404s falls back to the file-type
-                            // art rather than leaving a broken-image glyph.
+                            // Fall back to local art, never to another remote
+                            // URL: if the preview failed because Cloudinary is
+                            // unreachable or served a format this browser
+                            // can't decode, retrying `item.icon` fails the same
+                            // way and the row renders as a broken-image glyph.
                             onError={(e) => {
                                 e.currentTarget.onerror = null;
-                                e.currentTarget.src = item.icon;
+                                e.currentTarget.src = localIcon(item);
                             }}
                         />
 

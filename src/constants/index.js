@@ -285,8 +285,8 @@ const navLinks = [
     { id: "gallery", name: "Gallery", icon: "/images/photos.png", app: "gallery", dock: true },
     { id: "about", name: "About", icon: "/images/txt.png", app: "about" },
     { id: "skills", name: "Skills", icon: "/images/terminal.png", app: "skills", dock: true },
-    { id: "bookmarks", name: "Bookmarks", icon: "/images/safari.png", app: "bookmarks" },
-    { id: "resume", name: "Resume", icon: "/images/pdf.png", app: "resume", dock: true },
+    { id: "bookmarks", name: "Bookmarks", icon: "/images/safari.png", app: "bookmarks", dock: true },
+    { id: "resume", name: "Resume", icon: "/images/pdf.png", app: "resume" },
     {
       id: "tchpack",
       name: "Tchpack",
@@ -299,9 +299,9 @@ const navLinks = [
       icon: cldImage("openti_app_logo_lvmecw", { width: 128, version: 1785082962 }),
       folder: "OpenTI",
     },
-    { id: "archive", name: "Archive", icon: "/images/trash.png", location: "trash" },
+    { id: "archive", name: "Archive", icon: "/images/trash.png", location: "trash", dock: true },
     { id: "simple", name: "Simple", icon: "/icons/simple-app.svg", route: "/simple" },
-    { id: "contact", name: "Contact", icon: "/images/contact.png", app: "contact", dock: true },
+    { id: "contact", name: "Contact", icon: "/images/contact.png", app: "contact" },
   ];
 
   export {
