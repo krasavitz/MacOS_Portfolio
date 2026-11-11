@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://olivernaumov.xyz/sitemap.xml

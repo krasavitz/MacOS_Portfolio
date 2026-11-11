@@ -50,7 +50,7 @@ const CleanProject = () => {
 
     if (!project) {
         return (
-            <CleanLayout title="not found">
+            <CleanLayout>
                 <p className="clean-lede">no project by that name.</p>
                 <p className="clean-file">
                     <Link to="/simple">← all work</Link>
@@ -60,7 +60,7 @@ const CleanProject = () => {
     }
 
     return (
-        <CleanLayout title={project.name}>
+        <CleanLayout>
             <article className="clean-project" ref={ref}>
                 <header>
                     <h1 className="reveal" style={{ "--i": 0 }}>{project.name}</h1>

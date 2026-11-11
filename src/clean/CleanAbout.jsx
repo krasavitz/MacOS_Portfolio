@@ -9,7 +9,7 @@ const CleanAbout = () => {
     const ref = useReveal();
 
     return (
-    <CleanLayout title="about">
+    <CleanLayout>
         <article className="clean-project" ref={ref}>
             <header>
                 <h1 className="reveal" style={{ "--i": 0 }}>about</h1>

@@ -1,17 +1,19 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { applyMeta } from "../seo.js";
 
 import "#clean/clean.css";
 
 /* Chrome for the plain-HTML portfolio: a masthead, the page, and a footer that
-   points back at the desktop version. Also owns the document title, since this
-   is the side of the site meant to be linked and indexed. */
-const CleanLayout = ({ title, children }) => {
+   points back at the desktop version. Also keeps the head tags (title,
+   description, canonical, share preview) in step with the route, since this
+   is the side of the site meant to be linked and indexed — see src/seo.js. */
+const CleanLayout = ({ children }) => {
+    const { pathname } = useLocation();
+
     useEffect(() => {
-        document.title = title
-            ? `${title}, oliver naumov`
-            : "oliver naumov, designer";
-    }, [title]);
+        applyMeta(pathname);
+    }, [pathname]);
 
     return (
         <div className="clean">
