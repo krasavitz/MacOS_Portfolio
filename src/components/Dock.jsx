@@ -7,7 +7,7 @@ import useWindowStore from "#store/window.js";
 import useLocationStore from "#store/location.js";
 
 const Dock = () => {
-  const { openWindow, closeWindow, windows } = useWindowStore();
+  const { openWindow, closeWindow, focusWindow, windows, nextZIndex } = useWindowStore();
   const { activeLocation, setActiveLocation } = useLocationStore();
   const dockRef = useRef(null);
 
@@ -61,6 +61,15 @@ const Dock = () => {
 }, []);
 
 
+  // An app is "running" when its window is open. Archive has no window of its
+  // own, so it counts as running while the Finder is showing it.
+  const isRunning = ({ id, location }) =>
+    location
+      ? windows.finder.isOpen && activeLocation?.id === locations[location]?.id
+      : !!windows[id]?.isOpen &&
+        // Work and Archive share the Finder; only one of them lights up.
+        !(id === "finder" && activeLocation?.type === "trash");
+
   const toggleApp = (app) => {
     if(!app.canOpen) return;
 
@@ -85,8 +94,11 @@ const Dock = () => {
       return;
     }
 
+    // Open but buried under another window: bring it forward rather than
+    // closing something the visitor can't see. Only the front window toggles shut.
     if(window.isOpen) {
-      closeWindow(app.id);
+      if(window.zIndex === nextZIndex - 1) closeWindow(app.id);
+      else focusWindow(app.id);
     } else {
       openWindow(app.id);
     }
@@ -116,6 +128,7 @@ const Dock = () => {
                 className={canOpen ? "" : "opacity-60"} 
               />
             </button>
+            {isRunning({ id, location }) && <span className="dock-dot" aria-hidden="true" />}
           </div>
         ))}
       </div>

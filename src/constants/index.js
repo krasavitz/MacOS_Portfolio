@@ -280,27 +280,32 @@ const navLinks = [
   // name), `location` (a top-level location key), `href` (new tab), or `route`
   // (in-app link). `dock: true` pins it to the bottom bar *instead of* the
   // grid, the way iOS does it, so nothing appears twice.
+  // `bleed: true` marks art that fills its whole image; the macOS PNGs carry
+  // ~10% transparent padding, so bleed art is inset to the same visual size.
+  // `scale` fine-tunes one-off shapes (the trash can is taller than a squircle).
   const mobileApps = [
-    { id: "work", name: "Work", icon: "/images/finder.png", app: "work", dock: true },
+    { id: "work", name: "Work", icon: "/images/finder.png", app: "projects", dock: true },
     { id: "gallery", name: "Gallery", icon: "/images/photos.png", app: "gallery", dock: true },
-    { id: "about", name: "About", icon: "/images/txt.png", app: "about" },
+    // No About icon: the intro widget at the top of the springboard already
+    // shows the photo and opens About, so an icon would be a duplicate.
     { id: "skills", name: "Skills", icon: "/images/terminal.png", app: "skills", dock: true },
     { id: "bookmarks", name: "Bookmarks", icon: "/images/safari.png", app: "bookmarks", dock: true },
-    { id: "resume", name: "Resume", icon: "/images/pdf.png", app: "resume" },
+    { id: "resume", name: "Resume", icon: "/icons/resume-app.svg", app: "resume", bleed: true },
     {
       id: "tchpack",
       name: "Tchpack",
       icon: cldImage("400x400bb-75_trzm1s", { width: 128 }),
       href: "https://tchpack.com",
+      bleed: true,
     },
     {
       id: "openti",
       name: "OpenTI",
       icon: cldImage("openti_app_logo_lvmecw", { width: 128, version: 1785082962 }),
       folder: "OpenTI",
+      bleed: true,
     },
-    { id: "archive", name: "Archive", icon: "/images/trash.png", location: "trash", dock: true },
-    { id: "simple", name: "Simple", icon: "/icons/simple-app.svg", route: "/simple" },
+    { id: "archive", name: "Archive", icon: "/images/trash.png", location: "trash", dock: true, scale: 0.88 },
     { id: "contact", name: "Contact", icon: "/images/contact.png", app: "contact" },
   ];
 

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 
@@ -5,9 +6,22 @@ import { navLinks, locations } from '#constants';
 import useWindowStore from '#store/window';
 import useLocationStore from '#store/location.js';
 
+/* Ticks on the minute, so the menu-bar clock doesn't freeze at page load. */
+const useClock = () => {
+    const [now, setNow] = useState(() => dayjs());
+
+    useEffect(() => {
+        const id = setInterval(() => setNow(dayjs()), 15000);
+        return () => clearInterval(id);
+    }, []);
+
+    return now;
+};
+
 const Navbar = () => {
-    const { openWindow } = useWindowStore();
-    const { setActiveLocation } = useLocationStore();
+    const openWindow = useWindowStore((s) => s.openWindow);
+    const setActiveLocation = useLocationStore((s) => s.setActiveLocation);
+    const now = useClock();
 
     const handleNav = ({ type, location }) => {
         if (location && locations[location]) setActiveLocation(locations[location]);
@@ -22,8 +36,10 @@ const Navbar = () => {
 
                 <ul>
                     {navLinks.map(({ id, name, type, location }) => (
-                    <li key={id} onClick={() => handleNav({ type, location })}>
-                        <p>{name}</p>
+                        <li key={id}>
+                            <button type="button" onClick={() => handleNav({ type, location })}>
+                                {name}
+                            </button>
                         </li>
                     ))}
                 </ul>
@@ -33,7 +49,7 @@ const Navbar = () => {
                 {/* Escape hatch to the plain, linkable version of the portfolio. */}
                 <Link to="/simple" className="simple-link">Simple view</Link>
 
-                <time>{dayjs().format("ddd MMM D h:mm A")}</time>
+                <time dateTime={now.toISOString()}>{now.format("ddd MMM D h:mm A")}</time>
             </div>
         </nav>
     );

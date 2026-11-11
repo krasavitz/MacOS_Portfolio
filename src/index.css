@@ -10,34 +10,43 @@ body {
   height: 100dvh;
 }
 
-/* The fallback colour behind the wallpaper video — shown while it buffers and
-   if it never plays. It belongs on `html`, not `body`: the wallpaper sits at a
-   negative z-index, and a negative-z-index descendant paints *before*
-   block-level element backgrounds, so an opaque `body` background covers the
-   video entirely. On `html` it becomes the canvas background instead, which is
-   painted first and therefore stays behind it. */
+/* The white behind the wallpaper GIF, matching its own white edges. It belongs
+   on `html`, not `body`: the wallpaper sits at a negative z-index, and a
+   negative-z-index descendant paints *before* block-level element backgrounds,
+   so an opaque `body` background would cover it. On `html` it becomes the
+   canvas background instead, which is painted first and stays behind it. */
 html {
-  background-color: #101014;
+  background-color: #ffffff;
+  /* No grey flash on tap, and no double-tap-to-zoom delay on buttons. */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
-/* Behind every shell, covering the viewport like `background-size: cover`.
-   The scrim is a later sibling of the video so it always paints over it. */
+/* Behind every shell. The GIF is centred at no more than its native 800px so
+   the dots stay crisp; on a phone it shrinks to fit the width. Everything
+   that sits directly on the wallpaper (the intro, icon labels) uses dark ink
+   to read against the white. */
 .wallpaper {
-  @apply fixed inset-0 -z-10 pointer-events-none bg-[#101014];
+  @apply fixed inset-0 -z-10 pointer-events-none bg-white flex-center;
 
-  video,
   img {
-    @apply w-full h-full object-cover;
+    @apply w-[min(800px,100%)] h-auto max-h-full object-contain;
   }
 
-  /* `hidden` on the video must actually hide it — the object-cover rule above
-     would otherwise give the hidden element a box again. */
-  video[hidden] {
-    @apply !hidden;
-  }
+  /* Phone/tablet: the widget and icon grid fill the top of the screen, so
+     the horse drops into the open space just above the dock instead of
+     running behind the icons. */
+  @media (max-width: 1023px) {
+    @apply items-end;
+    /* The GIF's bottom third is blank white, so that part can sit behind
+       the dock; the horse itself lands just above it. */
+    padding-bottom: calc(env(safe-area-inset-bottom) + 2.5rem);
 
-  .wallpaper-scrim {
-    @apply absolute inset-0 bg-black/45;
+    /* Capped by height too, so short phones (iPhone SE) get a smaller horse
+       that clears the icon grid. */
+    img {
+      width: min(560px, 100%, 52dvh);
+    }
   }
 }
 
@@ -75,8 +84,16 @@ html {
     @apply w-dvw h-dvh overflow-hidden;
   }
 
+  /* Keyboard users get a visible ring; mouse clicks don't. */
+  #os :focus-visible {
+    outline: 2px solid var(--pink);
+    outline-offset: 2px;
+  }
+
+  /* Fixed height so #window-bounds can start exactly where the bar ends, and
+     above every window so a dragged window slides under it, never over it. */
   #os nav {
-    @apply flex justify-between items-center bg-black/40 backdrop-blur-3xl p-2 px-5 select-none text-zinc-100;
+    @apply relative z-[5000] h-11 flex justify-between items-center bg-black/85 backdrop-blur-3xl px-5 select-none text-zinc-100;
 
     /* The mark's viewBox is cropped to the artwork, so this is its real size. */
     img {
@@ -92,10 +109,11 @@ html {
     }
 
     ul {
-      @apply flex items-center gap-5 max-sm:hidden;
+      @apply flex items-center gap-1 max-sm:hidden;
 
-      p {
-        @apply text-sm cursor-pointer hover:underline transition-all;
+      button {
+        @apply text-sm px-2.5 py-1 rounded-md cursor-pointer transition-colors;
+        @apply hover:bg-white/15 active:bg-white/25;
       }
     }
 
@@ -121,7 +139,7 @@ html {
   #welcome {
     /* Parked bottom-left (clear of the centered dock) so open windows own the
        middle of the desktop. Mobile still centers the small-screen notice. */
-    @apply text-gray-200 flex flex-col justify-end items-start absolute bottom-28 left-10 select-none max-sm:inset-0 max-sm:bottom-auto max-sm:left-auto max-sm:h-screen max-sm:w-full max-sm:px-10 max-sm:justify-center max-sm:items-center;
+    @apply text-zinc-800 flex flex-col justify-end items-start absolute bottom-28 left-10 select-none max-sm:inset-0 max-sm:bottom-auto max-sm:left-auto max-sm:h-screen max-sm:w-full max-sm:px-10 max-sm:justify-center max-sm:items-center;
 
     /* A short typed intro, not a shell session. Sits directly on the animated
        wallpaper, so every line carries a dark shadow and the block gets a soft
@@ -129,35 +147,23 @@ html {
     .boot {
       @apply text-left w-[min(60vw,34rem)] max-sm:hidden;
       @apply relative p-5 -m-5 rounded-xl;
-      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9), 0 0 18px rgba(0, 0, 0, 0.6);
-    }
-
-    /* Radial scrim behind the text only — no hard edges against the wallpaper. */
-    .boot::before {
-      content: "";
-      @apply absolute inset-0 -z-10 rounded-xl pointer-events-none;
-      background: radial-gradient(
-        120% 100% at 0% 50%,
-        rgba(0, 0, 0, 0.55),
-        rgba(0, 0, 0, 0) 70%
-      );
     }
 
     .boot-line {
-      @apply flex items-baseline gap-2 text-[15px] leading-7 invisible text-gray-200;
+      @apply flex items-baseline gap-2 text-[15px] leading-7 invisible text-zinc-700;
 
       &.is-lead {
-        @apply text-3xl leading-tight font-semibold text-white mb-3;
+        @apply text-3xl leading-tight font-semibold text-zinc-950 mb-3;
       }
 
       &.is-hint {
-        @apply mt-5 text-xs text-gray-300;
+        @apply mt-5 text-xs text-zinc-500;
       }
     }
 
     .boot-text {
       &.is-muted {
-        @apply text-gray-200;
+        @apply text-zinc-700;
       }
     }
 
@@ -181,24 +187,51 @@ html {
     .desktop-icon {
       @apply absolute -translate-x-1/2 pointer-events-auto;
       @apply w-24 flex flex-col items-center gap-1.5 p-2 rounded-lg cursor-pointer;
-      @apply hover:bg-white/10 active:bg-white/15 transition-colors;
+      @apply hover:bg-black/5 active:bg-black/10 transition-colors;
 
       img {
         @apply w-14 h-14 object-contain rounded-xl shadow-lg shadow-black/40;
       }
 
       span {
-        @apply text-xs text-white text-center leading-tight px-1 rounded;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
+        @apply text-xs text-zinc-900 font-medium text-center leading-tight px-1 rounded;
       }
     }
   }
 
+  /* Draggable reads this rectangle as the limit for every window. */
+  #window-bounds {
+    @apply fixed top-11 inset-x-0 bottom-0 pointer-events-none;
+  }
+
+  /* Every window. Flex column so a maximized window's body can grow to fill it. */
+  .os-window {
+    @apply flex-col;
+  }
+
+  /* Maximized: fill the gap between the menu bar and the dock. !important
+     beats each window's own id-scoped size and position rules. */
+  #os .os-window.is-max {
+    position: fixed !important;
+    inset: 3.25rem 0.75rem 6.25rem !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: none !important;
+    max-height: none !important;
+    translate: none !important;
+
+    > :last-child {
+      @apply flex-1 min-h-0 !max-h-none overflow-auto;
+    }
+  }
+
+  /* Above windows, as on macOS: a window can slide under the dock but never
+     hide it. */
   #dock {
-    @apply absolute bottom-5 left-1/2 -translate-x-1/2 z-50 select-none max-sm:hidden;
+    @apply absolute bottom-5 left-1/2 -translate-x-1/2 z-[5000] select-none max-sm:hidden;
 
     .dock-container {
-      @apply bg-white/10 backdrop-blur-md justify-between rounded-2xl p-1.5 flex items-end gap-1.5;
+      @apply bg-black/5 border border-black/10 backdrop-blur-md justify-between rounded-2xl p-1.5 flex items-end gap-1.5;
     }
 
     .dock-icon {
@@ -208,30 +241,49 @@ html {
         @apply object-cover object-center;
       }
     }
+
+    /* Running-app dot under any app with an open window. */
+    .dock-dot {
+      @apply absolute -bottom-1 left-1/2 -translate-x-1/2 size-1 rounded-full bg-zinc-800;
+    }
   }
 
   #window-controls {
     @apply flex gap-2;
 
+    button {
+      @apply size-3.5 rounded-full cursor-pointer flex-center;
+      @apply text-[11px] leading-none font-bold text-black/60;
+
+      span {
+        @apply opacity-0 transition-opacity -translate-y-px;
+      }
+    }
+
+    &:hover button span,
+    button:focus-visible span {
+      @apply opacity-100;
+    }
+
     .close {
-      @apply size-3.5 rounded-full bg-[#ff6157] cursor-pointer;
+      @apply bg-[#ff6157];
     }
 
     .minimize {
-      @apply size-3.5 rounded-full bg-[#ffc030];
+      @apply bg-[#ffc030];
     }
 
     .maximize {
-      @apply size-3.5 rounded-full bg-[#2acb42];
+      @apply bg-[#2acb42];
     }
   }
 
   #window-header {
-    @apply flex items-center justify-between px-4 py-3 rounded-t-lg bg-[#2c2c2e] border-b border-[#3a3a3c] select-none text-sm text-zinc-400;
+    @apply flex shrink-0 items-center justify-between px-4 py-3 rounded-t-lg bg-[#2c2c2e] border-b border-[#3a3a3c] select-none text-sm text-zinc-400;
   }
 
   #safari {
-    @apply w-4xl absolute top-40 left-2/12 bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply w-4xl max-w-[calc(100vw-4rem)] absolute top-24 inset-x-0 mx-auto bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
 
     .search {
       @apply flex items-center gap-3 w-2/3 bg-[#2c2c2e] border border-[#3a3a3c] rounded-lg px-3 py-2 text-zinc-200;
@@ -242,7 +294,7 @@ html {
     }
 
     .bookmarks {
-      @apply bg-[#1c1c1e] p-10 max-w-3xl mx-auto;
+      @apply bg-[#1c1c1e] p-10 w-full max-w-3xl mx-auto max-h-[calc(100dvh-15rem)] overflow-y-auto;
 
       h2 {
         @apply text-xl font-bold text-[#ff5c9d];
@@ -292,7 +344,7 @@ html {
     }
 
     .skills {
-      @apply p-7 max-h-[74vh] overflow-y-auto bg-[#1c1c1e];
+      @apply p-7 max-h-[calc(100dvh-14rem)] overflow-y-auto bg-[#1c1c1e];
     }
 
     .skills-hero {
@@ -401,7 +453,7 @@ html {
   }
 
   #photos {
-    @apply w-[40rem] max-w-[92vw] h-[85vh] absolute top-16 left-1/2 -translate-x-1/2 bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply w-[40rem] max-w-[92vw] h-[calc(100dvh-9.5rem)] absolute top-16 inset-x-0 mx-auto bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
 
     #window-header {
       @apply shrink-0;
@@ -430,7 +482,7 @@ html {
   }
 
   #resume {
-    @apply w-[42rem] max-w-[92vw] h-[85vh] absolute top-16 left-1/2 -translate-x-1/2 bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply w-[42rem] max-w-[92vw] h-[calc(100dvh-9.5rem)] absolute top-16 inset-x-0 mx-auto bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
 
     #window-header {
       @apply shrink-0;
@@ -446,7 +498,7 @@ html {
   }
 
   #finder {
-    @apply absolute w-3xl h-[34rem] max-h-[80vh] left-40 top-20 shadow-2xl drop-shadow-2xl overflow-hidden rounded-xl;
+    @apply absolute w-3xl h-[34rem] max-h-[calc(100dvh-12rem)] left-40 top-20 shadow-2xl drop-shadow-2xl overflow-hidden rounded-xl;
 
     #window-header {
       @apply shrink-0;
@@ -631,7 +683,7 @@ html {
     }
 
     .txt-file {
-      @apply p-6 max-h-[70vh] overflow-y-auto space-y-3 text-sm text-zinc-300 leading-relaxed;
+      @apply p-6 max-h-[calc(100dvh-16rem)] overflow-y-auto space-y-3 text-sm text-zinc-300 leading-relaxed;
 
       .txt-file-image {
         @apply w-24 h-24 object-cover rounded-lg mb-2;
@@ -668,7 +720,7 @@ html {
   }
 
   #imgfile {
-    @apply w-xl absolute top-40 left-2/12 bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply w-xl absolute top-24 left-2/12 bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
 
     #window-header {
       p {
@@ -677,14 +729,14 @@ html {
     }
 
     .preview {
-      @apply p-2 bg-[#2c2c2e] flex items-center justify-center max-h-[80vh] overflow-hidden;
+      @apply p-2 bg-[#2c2c2e] flex items-center justify-center max-h-[calc(100dvh-13rem)] overflow-hidden;
 
       img {
-        @apply max-w-full max-h-[76vh] w-auto h-auto object-contain object-center;
+        @apply max-w-full max-h-[calc(100dvh-14rem)] w-auto h-auto object-contain object-center;
       }
 
       video {
-        @apply max-w-full max-h-[76vh] w-auto h-auto object-contain object-center;
+        @apply max-w-full max-h-[calc(100dvh-14rem)] w-auto h-auto object-contain object-center;
       }
 
       .video-placeholder {
@@ -709,10 +761,10 @@ html {
     }
 
     .preview {
-      @apply p-2 bg-[#2c2c2e] flex items-center justify-center max-h-[80vh] overflow-hidden;
+      @apply p-2 bg-[#2c2c2e] flex items-center justify-center max-h-[calc(100dvh-13rem)] overflow-hidden;
 
       video {
-        @apply max-w-full max-h-[76vh] w-auto h-auto object-contain object-center;
+        @apply max-w-full max-h-[calc(100dvh-14rem)] w-auto h-auto object-contain object-center;
       }
 
       .video-placeholder {
