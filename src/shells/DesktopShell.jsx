@@ -4,6 +4,7 @@ import { Draggable } from "gsap/Draggable";
 
 import { Terminal, Safari, Resume, Finder, Text, Image, Contact, Photos, Video } from '#windows';
 import { Navbar, Welcome, Dock, DesktopIcons } from '#components';
+import SwatchRing from '#features/vibe/SwatchRing.jsx';
 import useWindowStore from "#store/window.js";
 
 gsap.registerPlugin(Draggable);
@@ -24,8 +25,10 @@ const DesktopShell = () => {
     return (
         <>
             <Navbar />
+            <SwatchRing />
             <Welcome />
             <DesktopIcons />
+
             <Dock />
 
             {/* The area a window may be dragged within: everything below the

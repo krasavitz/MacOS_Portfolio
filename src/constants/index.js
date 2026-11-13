@@ -50,33 +50,36 @@ const navLinks = [
 
   const dockApps = [
     {
+      // Points the Finder at Work, the way Archive points it at the trash —
+      // without this it reopened whatever folder the Finder showed last.
       id: "finder",
       name: "Work",
-      icon: "finder.png",
+      icon: "app-icons/work.svg",
       canOpen: true,
+      location: "work",
     },
     {
       id: "safari",
       name: "Bookmarks",
-      icon: "safari.png",
+      icon: "app-icons/bookmarks.svg",
       canOpen: true,
     },
     {
       id: "photos",
       name: "Gallery",
-      icon: "photos.png",
+      icon: "app-icons/gallery.svg",
       canOpen: true,
     },
     {
       id: "contact",
       name: "Contact",
-      icon: "contact.png",
+      icon: "app-icons/contact.svg",
       canOpen: true,
     },
     {
       id: "terminal",
       name: "Skills",
-      icon: "terminal.png",
+      icon: "app-icons/skills.svg",
       canOpen: true,
     },
     {
@@ -84,7 +87,7 @@ const navLinks = [
       // same way the mobile springboard's Archive icon does.
       id: "trash",
       name: "Archive",
-      icon: "trash.png",
+      icon: "app-icons/archive.svg",
       canOpen: true,
       location: "trash",
     },
@@ -257,11 +260,15 @@ const navLinks = [
   // `pos` scatters them across the desktop as percentages of the viewport,
   // rather than stacking them in a corner. Keep them clear of the menu bar
   // (top ~6%), the dock (bottom ~12%) and the boot text (bottom-left).
+  // The Tchpack app icon has a light bevelled rim baked into its edges, which
+  // shows as a pale line along the bottom; crop 3% off each side to lose it.
+  const TCHPACK_ICON = cldImage("400x400bb-75_trzm1s", { width: 128, before: "c_crop,w_0.94,h_0.94,g_center" });
+
   const desktopShortcuts = [
     {
       id: "tchpack",
       name: "Tchpack",
-      icon: cldImage("400x400bb-75_trzm1s", { width: 128 }),
+      icon: TCHPACK_ICON,
       href: "https://tchpack.com",
       pos: { top: "11%", left: "80%" },
     },
@@ -284,17 +291,17 @@ const navLinks = [
   // ~10% transparent padding, so bleed art is inset to the same visual size.
   // `scale` fine-tunes one-off shapes (the trash can is taller than a squircle).
   const mobileApps = [
-    { id: "work", name: "Work", icon: "/images/finder.png", app: "projects", dock: true },
-    { id: "gallery", name: "Gallery", icon: "/images/photos.png", app: "gallery", dock: true },
+    { id: "work", name: "Work", icon: "/images/app-icons/work.svg", app: "projects", dock: true, bleed: true },
+    { id: "gallery", name: "Gallery", icon: "/images/app-icons/gallery.svg", app: "gallery", dock: true, bleed: true },
     // No About icon: the intro widget at the top of the springboard already
     // shows the photo and opens About, so an icon would be a duplicate.
-    { id: "skills", name: "Skills", icon: "/images/terminal.png", app: "skills", dock: true },
-    { id: "bookmarks", name: "Bookmarks", icon: "/images/safari.png", app: "bookmarks", dock: true },
-    { id: "resume", name: "Resume", icon: "/icons/resume-app.svg", app: "resume", bleed: true },
+    { id: "skills", name: "Skills", icon: "/images/app-icons/skills.svg", app: "skills", dock: true, bleed: true },
+    { id: "bookmarks", name: "Bookmarks", icon: "/images/app-icons/bookmarks.svg", app: "bookmarks", dock: true, bleed: true },
+    { id: "resume", name: "Resume", icon: "/images/app-icons/resume.svg", app: "resume", bleed: true },
     {
       id: "tchpack",
       name: "Tchpack",
-      icon: cldImage("400x400bb-75_trzm1s", { width: 128 }),
+      icon: TCHPACK_ICON,
       href: "https://tchpack.com",
       bleed: true,
     },
@@ -305,8 +312,8 @@ const navLinks = [
       folder: "OpenTI",
       bleed: true,
     },
-    { id: "archive", name: "Archive", icon: "/images/trash.png", location: "trash", dock: true, scale: 0.88 },
-    { id: "contact", name: "Contact", icon: "/images/contact.png", app: "contact" },
+    { id: "archive", name: "Archive", icon: "/images/app-icons/archive.svg", location: "trash", dock: true, bleed: true },
+    { id: "contact", name: "Contact", icon: "/images/app-icons/contact.svg", app: "contact", bleed: true },
   ];
 
   export {
@@ -332,7 +339,7 @@ const navLinks = [
       {
         id: 5,
         name: "Tchpack",
-        icon: "/images/folder.png",
+        icon: "/images/app-icons/folder-leopard.svg",
         kind: "folder",
         children: [
           {
@@ -364,7 +371,7 @@ const navLinks = [
           {
             id: 8,
             name: "tchpack.com",
-            icon: cldImage("400x400bb-75_trzm1s", { width: 128 }),
+            icon: TCHPACK_ICON,
             kind: "file",
             fileType: "url",
             // TODO: confirm the public Tchpack URL
@@ -379,21 +386,47 @@ const navLinks = [
             pdfUrl: cldPdf("Tchpack_Brand_Guidelines_ie61rc"),
             alt: "Tchpack brand guidelines",
           },
+          // Shots of the current tchpack.com, framed for the portfolio. Captured
+          // from the live site and stored locally in public/images/work/tchpack/.
           ...[
-            // Public ID differs from the display name shown in Cloudinary
-            // ("Tchpack App Logo"); the ID is what the URL needs.
-            { name: "Tchpack App Logo", id: "400x400bb-75_trzm1s" },
-            { name: "Tchpack Logo White", id: "TchpackLogoWhite_dpyoqj" },
-            { name: "Tchpack Logo Text", id: "TchpackLogoText_avsgk0" },
-            { name: "Tchpack Black", id: "TchpackBlack_x9dkhs" },
-            { name: "Spikes Logo Black", id: "SpikesLogoBlack_fu1k2s" },
-            { name: "Tchpack Desktop", id: "tchpack_desktop_txbts3" },
+            ["Tchpack Home", "tchpack-home"],
+            ["Meet Aria", "tchpack-aria"],
+            ["Find Your Maker", "tchpack-find-your-maker"],
+            ["Real-Time Messaging", "tchpack-messaging"],
+            ["Discover", "tchpack-discover"],
+            ["Create Tech Packs", "tchpack-tech-packs"],
+            // product pages
+            ["Studio", "tchpack-studio"],
+            ["Studio Flows", "tchpack-studio-flow"],
+            ["Studio with Aria", "tchpack-studio-aria"],
+            ["Tech Pack Builder", "tchpack-tech-pack-builder"],
+            ["Tech Packs Anywhere", "tchpack-tech-pack-anywhere"],
+            ["Manufacturers Discover", "tchpack-manufacturers-discover"],
+            ["Manufacturer Profiles", "tchpack-manufacturers-profiles"],
+            ["Manufacturer Chat", "tchpack-manufacturers-connect"],
+            ["Meet the Maker", "tchpack-manufacturers-maker"],
+            ["What Aria Can Do", "tchpack-aria-can-do"],
+            ["Give Aria the Whole Job", "tchpack-aria-whole-job"],
+            ["Aria Works Like You", "tchpack-aria-works"],
+            ["Wholesale Blanks", "tchpack-blanks"],
+            ["Tchpack Mobile", "tchpack-mobile"],
+            ["Tchpack Mobile 2", "tchpack-mobile-2"],
+            ["Product Pages Mobile", "tchpack-product-mobile"],
+          ].map(([name, file], i) => ({
+            id: 200 + i,
+            name,
+            icon: "/images/image.png",
+            kind: "file",
+            fileType: "img",
+            imageUrl: `/images/work/tchpack/${file}.jpg`,
+            alt: `${name}, tchpack.com`,
+          })),
+          ...[
             { name: "App Store Phone 1", id: "App_Store_Phone_1_nyr7o8" },
             { name: "App Store Phone 2", id: "App_Store_Phone_2_xhetyw" },
             { name: "App Store Phone 3", id: "App_Store_Phone_3_h0ezgm" },
             { name: "App Store Phone 4", id: "App_Store_Phone_4_bvrwwf" },
             { name: "App Store Phone 5", id: "App_Store_Phone_5_uwkaht" },
-            { name: "Tchpack UI 1", id: "google_ads_story_1_qlalbv" },
             { name: "Tchpack UI 2", id: "google_ads_story_2_czjvqi" },
           ].map((a, i) => ({
             id: 100 + i,
@@ -411,7 +444,7 @@ const navLinks = [
       {
         id: 6,
         name: "OpenTI",
-        icon: "/images/folder.png",
+        icon: "/images/app-icons/folder-zebra.svg",
         kind: "folder",
         children: [
           {
@@ -596,7 +629,7 @@ const navLinks = [
       {
         id: 7,
         name: "Trace",
-        icon: "/images/folder.png",
+        icon: "/images/app-icons/folder-checker.svg",
         kind: "folder",
         category: "university",
         children: [
@@ -652,7 +685,7 @@ const navLinks = [
       {
         id: 8,
         name: "Reflect",
-        icon: "/images/folder.png",
+        icon: "/images/app-icons/folder-paisley-red.svg",
         kind: "folder",
         category: "university",
         children: [
@@ -708,7 +741,7 @@ const navLinks = [
       {
         id: 9,
         name: "Game Dev & Design",
-        icon: "/images/folder.png",
+        icon: "/images/app-icons/folder-checker-red.svg",
         kind: "folder",
         category: "university",
         children: [
@@ -797,7 +830,7 @@ const navLinks = [
       {
         id: 10,
         name: "Makerspace",
-        icon: "/images/folder.png",
+        icon: "/images/app-icons/folder-paisley-navy.svg",
         kind: "folder",
         category: "university",
         children: [
@@ -921,8 +954,26 @@ const navLinks = [
     name: "Archive",
     icon: "/icons/trash.svg",
     kind: "folder",
-    // Empty — the archive images now live in the Gallery (see `gallery`).
-    children: [],
+    // The embroidered patches (scripts/patches.mjs). Each file's icon is the
+    // patch itself, so the folder reads as a pile of patches.
+    children: [
+      ["Palm Crest", "patch-crest"],
+      ["Checker Star", "patch-checker"],
+      ["Zebra Star", "patch-zebra-star"],
+      ["Aviator Wings", "patch-wings"],
+      ["Music Ribbon", "patch-ribbon"],
+      ["Unit Badge", "patch-badge"],
+      ["Name Tape", "patch-nametape"],
+      ["Paisley Bandana", "patch-bandana"],
+    ].map(([name, file], i) => ({
+      id: 400 + i,
+      name,
+      icon: `/images/stickers/${file}.svg`,
+      kind: "file",
+      fileType: "img",
+      imageUrl: `/images/stickers/${file}.svg`,
+      alt: `${name} patch`,
+    })),
   };
 
   export const locations = {

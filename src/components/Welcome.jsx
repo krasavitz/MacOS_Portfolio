@@ -1,79 +1,51 @@
-import { useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import gsap from 'gsap';
-import { TextPlugin } from 'gsap/TextPlugin';
-import { useGSAP } from '@gsap/react';
 import { profile } from '#constants';
+import Bracelet from '#features/vibe/Bracelet.jsx';
+import { dur } from '#utils/motion.js';
 
-gsap.registerPlugin(TextPlugin);
-
-/* The desktop intro, written as a note rather than a shell session. The first
-   line is typed out character by character; the rest fade in under it. */
-const SEQUENCE = [
-    { kind: 'type', text: profile.greeting },
-    { kind: 'out', text: profile.intro },
-    { kind: 'hint', text: 'click around' },
-];
-
-const CHAR_DURATION = 0.045;
-const LINE_GAP = 0.25;
-
+/* The desktop intro, in two pieces:
+   - the beaded OLIVER bracelet, centred under the horse, which takes shape
+     bead by bead on load;
+   - a sticky note in the bottom-left that pops on once the bracelet has
+     formed. Folded, it's just the greeting; click it to read the one-line
+     intro, and again to fold it back.
+   The greeting is also a visually hidden heading, for screen readers and
+   search engines. */
 const Welcome = () => {
-    const rootRef = useRef(null);
+    const noteRef = useRef(null);
+    const [open, setOpen] = useState(false);
 
-    useGSAP(() => {
-        const root = rootRef.current;
-        if (!root) return;
-
-        const lines = gsap.utils.toArray('.boot-line', root);
-        const cursor = root.querySelector('.boot-cursor');
-        const tl = gsap.timeline();
-
-        lines.forEach((line, i) => {
-            const step = SEQUENCE[i];
-            const body = line.querySelector('.boot-text');
-
-            tl.set(line, { visibility: 'visible' }, `+=${LINE_GAP}`);
-
-            if (step.kind === 'type') {
-                tl.to(body, {
-                    duration: step.text.length * CHAR_DURATION,
-                    ease: 'none',
-                    text: { value: step.text, delimiter: '' },
-                });
-            } else {
-                tl.fromTo(body, { opacity: 0, y: 4 }, { opacity: 1, y: 0, duration: 0.35 });
-            }
-        });
-
-        // Cursor parks at the end of the sequence and blinks forever.
-        tl.set(cursor, { visibility: 'visible' }).to(cursor, {
-            opacity: 0,
-            duration: 0.5,
-            ease: 'steps(1)',
-            repeat: -1,
-            yoyo: true,
-        });
-
-        return () => tl.kill();
+    const reveal = useCallback(() => {
+        if (!noteRef.current) return;
+        gsap.fromTo(
+            noteRef.current,
+            { autoAlpha: 0, y: 14, rotation: -9, scale: 0.92 },
+            { autoAlpha: 1, y: 0, rotation: -3, scale: 1, duration: dur(0.55), ease: 'back.out(1.8)' }
+        );
     }, []);
 
     return (
         <section id="welcome">
-            <div ref={rootRef} className="boot">
-                {SEQUENCE.map((step, i) => (
-                    <p
-                        key={i}
-                        className={`boot-line ${step.kind === 'type' ? 'is-lead' : ''} ${
-                            step.kind === 'hint' ? 'is-hint' : ''
-                        }`}
-                    >
-                        <span className={`boot-text ${step.muted ? 'is-muted' : ''}`}>
-                            {step.kind === 'type' ? '' : step.text}
-                        </span>
-                        {step.kind === 'type' && <span className="boot-cursor" />}
-                    </p>
-                ))}
-            </div>
+            <h1 className="sr-only">{profile.greeting}</h1>
+
+            <Bracelet width={400} height={84} beadSize={27} onAssembled={reveal} className="boot-bracelet" />
+
+            <button
+                ref={noteRef}
+                type="button"
+                className={`sticky-note${open ? ' is-open' : ''}`}
+                onClick={() => setOpen((o) => !o)}
+                aria-expanded={open}
+            >
+                <span className="note-tape" aria-hidden="true" />
+                <span className="note-title">{profile.greeting}</span>
+                {/* Always rendered; unfolds via CSS (grid rows 0fr → 1fr). */}
+                <span className="note-body" aria-hidden={!open}>
+                    <span className="note-text">{profile.intro}</span>
+                </span>
+                <span className="note-hint">{open ? 'click to fold' : 'click me →'}</span>
+            </button>
         </section>
     );
 };

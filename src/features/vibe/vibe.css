@@ -1,0 +1,296 @@
+/* The BAZO-inspired extras: the entry screen and the Archive's patch board.
+   Plain CSS (no Tailwind @apply) so this file stands on its own. */
+
+/* ---------- entry screen ---------- */
+.entry-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  /* The white is drawn by .entry-cover, so it can drop out separately. */
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Solid white: hides the horse until the visitor enters. On the way in it
+   becomes frosted glass (--fog, animated by EntryScreen) and clears. */
+.entry-cover {
+  --fog: 0px;
+  position: absolute;
+  inset: 0;
+  background: #ffffff;
+  -webkit-backdrop-filter: blur(var(--fog));
+  backdrop-filter: blur(var(--fog));
+}
+
+/* The content: logo, name, role and button, stacked and centred. Hidden
+   until EntryScreen fades it in (the white cover shows at once). */
+.entry-inner {
+  position: relative;
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #111;
+}
+
+/* The logo mark, above the name: the logo SVG as a mask over solid ink, so
+   it can be scaled and faded like any element. */
+.entry-logo {
+  display: block;
+  width: clamp(72px, 14vw, 104px);
+  aspect-ratio: 1;
+  margin-bottom: 22px;
+  background: #111111;
+  -webkit-mask: url("/images/oliver-logo-black.svg") center / contain no-repeat;
+  mask: url("/images/oliver-logo-black.svg") center / contain no-repeat;
+  will-change: transform;
+}
+
+.entry-inner h1 {
+  margin: 0;
+  font-family: Georama, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(30px, 6vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* The name is split into letters for the opening; the wrapper clips them,
+   so each one rises from behind an invisible edge. */
+.entry-name {
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.04em 0.02em 0.1em;
+  vertical-align: top;
+}
+
+.entry-char {
+  display: inline-block;
+}
+
+.entry-role {
+  margin: 10px 0 0;
+  font-size: 15px;
+  color: #52525b;
+}
+
+/* Just the words, in a light grey that darkens on hover:
+   quiet enough to sit under the logo without competing with it. */
+.entry-button {
+  margin-top: 26px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #8e8e93;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.entry-button:hover {
+  color: #111;
+}
+
+.entry-button:active {
+  transform: scale(0.97);
+}
+
+/* No focus ring: the button is focused on load, and Enter or Space works
+   from anywhere on this screen anyway. */
+/* #os-scoped to beat the site-wide focus ring (index.css). */
+#os .entry-button:focus,
+#os .entry-button:focus-visible {
+  outline: none;
+}
+
+/* ---------- archive patch board ---------- */
+/* PatchBoard: patches scattered on the Archive, draggable inside it. */
+.patch-board {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.board-patch {
+  position: absolute;
+  height: auto;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-drag: none;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.35));
+}
+
+.board-patch.is-lifted {
+  cursor: grabbing;
+  filter: drop-shadow(0 12px 14px rgba(0, 0, 0, 0.4));
+}
+
+/* Phone: a tall board under the sheet's title bar. */
+.patch-board.is-phone {
+  height: calc(100dvh - 10rem);
+  min-height: 0;
+  margin: 8px 12px 0;
+}
+
+/* ---------- Swatch book (desktop, top left) ---------- */
+/* Each swatch hangs from the ring by its eyelet: the eyelet (38, 14 in the
+   swatch) sits on the ring's centre (38, 26 in the box), and every rotation
+   pivots there, so swatches never leave the ring. --back is how far back in
+   the stack a swatch is (0 = front). */
+.swatch-ring {
+  position: absolute;
+  top: 68px;
+  left: 44px;
+  z-index: 30;
+  width: 260px;
+  height: 170px;
+  pointer-events: none;
+}
+
+.swatch-body {
+  position: absolute;
+  inset: 0;
+  scale: 1.18;
+  transform-origin: top left;
+}
+
+.swatch-book {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100px;
+  height: 140px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.swatch-book:focus-visible {
+  outline: none;
+}
+
+.swatch {
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 76px;
+  height: 108px;
+  transform-origin: 38px 14px;
+  /* At rest: a tidy stack, each one back a few degrees further round. */
+  transform: rotate(calc(var(--back) * -2.5deg));
+  transition: transform 0.32s cubic-bezier(0.3, 0.8, 0.3, 1);
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.22)) drop-shadow(0 8px 10px rgba(0, 0, 0, 0.12));
+}
+
+/* Hover: a small fan, just enough to show the pile. */
+.swatch-ring.is-peek .swatch {
+  transform: rotate(calc(var(--back) * -8deg));
+}
+
+/* The flick: the front swatch swings up and over the ring... */
+.swatch-ring .swatch.is-swinging {
+  transform: rotate(-190deg);
+  transition: transform 0.26s cubic-bezier(0.5, 0, 0.75, 0.6);
+}
+
+.swatch-face {
+  position: absolute;
+  inset: 0;
+}
+
+/* Fabric: the print, plus a fine twill and a soft light falloff on top. */
+.swatch-face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.07) 0 1px, transparent 1px 3px),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.18), transparent 45%, rgba(0, 0, 0, 0.16));
+}
+
+/* The punched, metal-rimmed hole the ring goes through. */
+.swatch-eyelet {
+  position: absolute;
+  z-index: 1;
+  left: 38px;
+  top: 14px;
+  width: 12px;
+  height: 12px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #2a2a2c 0 2.6px, #d9dbe0 3px 4.4px, #8a8d95 4.8px 6px);
+}
+
+.swatch-hoop {
+  position: absolute;
+  z-index: 50;
+  left: 18px;
+  top: 6px;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
+}
+
+/* The tag naming the fabric in front. */
+/* Below the stack, clear of the hover fan (which swings out to the right). */
+.swatch-tag {
+  position: absolute;
+  left: 6px;
+  top: 128px;
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin: 0;
+  color: #1d1d1f;
+}
+
+.swatch-tag-no {
+  font: 700 8px/1 "Roboto Mono", ui-monospace, monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #9a917f;
+}
+
+.swatch-tag-name {
+  margin-top: 3px;
+  font: 650 13px/1.1 -apple-system, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+}
+
+.swatch-tag-spec {
+  font: 500 9px/1.3 "Roboto Mono", ui-monospace, monospace;
+  color: #6f685c;
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .swatch,
+  .swatch-ring .swatch.is-swinging {
+    transition: none;
+  }
+}
+
+/* Smaller laptops: no enlarging. */
+@media (max-width: 1279px) {
+  .swatch-body {
+    scale: 1;
+  }
+}

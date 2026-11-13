@@ -1,6 +1,6 @@
 /* iOS-style shell for phones and tablets (<1024px). Loaded from index.css.
    Dark tokens match the desktop windows: #1c1c1e ground, #2c2c2e panels,
-   #3a3a3c borders, --pink accent. */
+   #3a3a3c borders, white accents. */
 
 @layer components {
   .ios-shell {
@@ -16,7 +16,10 @@
      survive a light patch of wallpaper. */
   .status-bar {
     @apply flex items-center justify-between shrink-0 px-4 py-1.5;
-    @apply bg-black/85 backdrop-blur-3xl text-sm text-zinc-100;
+    @apply bg-[#1d1d1e] text-sm text-zinc-100;
+    /* Woodland camo, matching the desktop menu bar. */
+    background-image: url("/images/textures/camo-bar.jpg");
+    background-size: 256px 256px;
 
     .status-identity {
       @apply flex items-center gap-1.5 min-w-0;
@@ -33,6 +36,11 @@
     .status-icons {
       @apply flex items-center gap-1.5 shrink-0;
 
+      /* Background-music speaker: a real tap target in a tiny bar. */
+      .sound-toggle {
+        @apply flex-center size-8 -my-1.5 mr-0.5 rounded-full active:bg-white/15;
+      }
+
       time {
         @apply font-medium mr-1;
       }
@@ -41,7 +49,7 @@
 
   /* ---------- home screen ---------- */
   .springboard {
-    @apply flex-1 flex flex-col justify-between min-h-0 px-6 pt-6 pb-4;
+    @apply relative flex-1 flex flex-col justify-between min-h-0 px-6 pt-6 pb-4;
   }
 
   /* Widget + grid. Scrolls on its own if a short phone can't fit both, so
@@ -125,6 +133,9 @@
   .ios-dock {
     @apply flex justify-around items-center gap-3 shrink-0 mt-6 p-3 rounded-3xl;
     @apply bg-black/5 border border-black/10 backdrop-blur-md;
+    /* The same faint checkerboard as the desktop dock. */
+    background-image: repeating-conic-gradient(rgba(0, 0, 0, 0.07) 0 25%, transparent 0 50%);
+    background-size: 14px 14px;
 
     .app-icon {
       @apply min-w-0 flex-1;
@@ -179,7 +190,10 @@
 
   .app-nav {
     @apply relative flex items-center justify-center shrink-0 h-12 px-3;
-    @apply border-b border-[#3a3a3c] bg-[#1c1c1e];
+    @apply border-b border-[#3a3a3c] bg-[#2c2c2e];
+    /* The same woodland camo as the desktop window title bars. */
+    background-image: url("/images/textures/camo-dark.jpg");
+    background-size: 256px 256px;
 
     h2 {
       @apply text-base font-semibold truncate max-w-[50%];
@@ -188,9 +202,11 @@
 
   /* Full nav-bar height, so the whole left corner is a target, not just the
      glyph. The label names the screen it returns to and truncates if long. */
+  /* White on a light pill, so it reads as a button on the camo. */
   .app-back {
-    @apply absolute left-0 inset-y-0 flex items-center gap-0 pl-1.5 pr-3 text-[var(--pink)];
-    @apply text-[16px] active:opacity-50 transition-opacity max-w-[25%];
+    @apply absolute left-2 top-1/2 -translate-y-1/2 flex items-center gap-0 pl-1 pr-3 py-1 rounded-full text-white;
+    @apply bg-white/12 ring-1 ring-white/10 backdrop-blur-sm;
+    @apply text-[15px] active:opacity-50 transition-opacity max-w-[30%];
 
     span {
       @apply truncate;
@@ -229,7 +245,7 @@
   }
 
   .row-sub {
-    @apply text-xs text-zinc-400 truncate;
+    @apply text-xs font-semibold text-zinc-400 truncate;
   }
 
   .ios-empty {
@@ -253,7 +269,7 @@
     }
 
     .prose-heading {
-      @apply text-[11px] tracking-[0.18em] text-[var(--pink)] mt-7 mb-2 font-roboto lowercase;
+      @apply text-[11px] font-bold tracking-[0.18em] text-white mt-7 mb-2 font-roboto lowercase;
     }
   }
 
@@ -295,7 +311,7 @@
     @apply pb-1;
 
     .eyebrow {
-      @apply text-[11px] uppercase tracking-[0.2em] text-[var(--pink)] mb-1;
+      @apply text-[11px] font-bold uppercase tracking-[0.2em] text-white mb-1;
     }
 
     h2 {
@@ -371,7 +387,7 @@
   /* ---------- section label (Work, project pages) ---------- */
   .ios-section {
     @apply flex items-baseline gap-2 px-1 mb-2.5;
-    @apply font-roboto text-[11px] tracking-[0.2em] lowercase text-[var(--pink)];
+    @apply font-roboto font-bold text-[11px] tracking-[0.2em] lowercase text-white;
 
     span {
       @apply text-zinc-500 tracking-normal;
@@ -437,7 +453,7 @@
       }
 
       .sub {
-        @apply mt-1.5 text-[15px] leading-snug text-zinc-400;
+        @apply mt-1.5 text-[15px] font-semibold leading-snug text-zinc-400;
       }
 
       .links {
@@ -448,7 +464,7 @@
 
   .ios-pill {
     @apply inline-flex items-center gap-1 h-9 px-4 rounded-full text-sm font-medium;
-    @apply bg-[var(--pink)] text-white active:opacity-70 transition-opacity;
+    @apply bg-white text-zinc-900 active:opacity-70 transition-opacity;
   }
 
   .project-grid {
@@ -479,7 +495,7 @@
   }
 
   .doc-icon {
-    @apply size-10 shrink-0 rounded-lg flex-center bg-[var(--pink)]/15 text-[var(--pink)];
+    @apply size-10 shrink-0 rounded-lg flex-center bg-white/10 text-white;
   }
 
   .project-prose {
@@ -490,7 +506,7 @@
     }
 
     .prose-heading {
-      @apply text-[11px] tracking-[0.18em] text-zinc-500 mt-6 mb-1.5 font-roboto lowercase;
+      @apply text-[11px] font-bold tracking-[0.18em] text-zinc-400 mt-6 mb-1.5 font-roboto lowercase;
     }
 
     .prose-heading:first-child {

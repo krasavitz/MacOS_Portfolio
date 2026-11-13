@@ -7,6 +7,7 @@ import clsx from "clsx";
 import useWindowStore from "#store/window.js";
 import { cldThumbFromUrl } from "#utils/cloudinary.js";
 import { PdfThumb, DEFAULT_PDF } from "#features/PdfViewer.jsx";
+import PatchBoard from "#features/vibe/PatchBoard.jsx";
 
 const Finder = () => {
     const { openWindow } = useWindowStore();
@@ -148,10 +149,7 @@ const Finder = () => {
                 <div className="about-pane">
                     <div className="about-head">
                         <img className="about-photo" src={profile.photo} alt={profile.name} />
-                        <div>
-                            <h2>{profile.name}</h2>
-                            <p className="about-role">{profile.role}</p>
-                        </div>
+                        <h2>{profile.name}</h2>
                     </div>
 
                     <dl className="about-meta">
@@ -168,6 +166,11 @@ const Finder = () => {
                             <p key={i}>{para}</p>
                         ))}
                     </div>
+                </div>
+            ) : activeLocation.type === "trash" ? (
+                // The Archive is a board of patches you can move around.
+                <div className="content patch-content">
+                    <PatchBoard items={children} onOpen={openItem} />
                 </div>
             ) : (
                 <div className="content">

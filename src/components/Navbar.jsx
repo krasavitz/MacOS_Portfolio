@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { navLinks, locations } from '#constants';
 import useWindowStore from '#store/window';
 import useLocationStore from '#store/location.js';
+import SoundToggle from '#features/vibe/SoundToggle.jsx';
 
 /* Ticks on the minute, so the menu-bar clock doesn't freeze at page load. */
 const useClock = () => {
@@ -47,6 +48,8 @@ const Navbar = () => {
 
             <div>
                 {/* Escape hatch to the plain, linkable version of the portfolio. */}
+                <SoundToggle />
+
                 <Link to="/simple" className="simple-link">Simple view</Link>
 
                 <time dateTime={now.toISOString()}>{now.format("ddd MMM D h:mm A")}</time>

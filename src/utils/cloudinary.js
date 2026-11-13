@@ -31,19 +31,23 @@ const defaultVideoTransforms = "f_auto,q_auto";
  * image in browsers that already cached it. Bump this to any new number
  * (the upload's unix timestamp is the convention) to force a fresh fetch.
  *
+ * `before` is a transform applied to the original before resizing, e.g. a
+ * crop: "c_crop,w_0.94,h_0.94,g_center" trims 3% off every edge.
+ *
  * @param {string} publicId e.g. "tchpack/brand-system"
- * @param {{ width?: number, extra?: string, version?: number|string }} [opts]
+ * @param {{ width?: number, extra?: string, before?: string, version?: number|string }} [opts]
  */
 export const cldImage = (
   publicId,
-  { width = 1600, extra = "", version = "" } = {}
+  { width = 1600, extra = "", before = "", version = "" } = {}
 ) => {
   if (!publicId) return "";
   const t = [defaultImageTransforms, `w_${width}`, extra]
     .filter(Boolean)
     .join(",");
+  const pre = before ? `${before}/` : "";
   const v = version ? `v${String(version).replace(/^v/, "")}/` : "";
-  return `${BASE}/image/upload/${t}/${v}${publicId}`;
+  return `${BASE}/image/upload/${pre}${t}/${v}${publicId}`;
 };
 
 /**

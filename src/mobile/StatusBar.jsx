@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { Wifi, BatteryMedium, SignalHigh } from "lucide-react";
+import SoundToggle from "#features/vibe/SoundToggle.jsx";
 
 /* The mobile menu bar. Deliberately the desktop's bar rather than a plain iOS
    status bar ([Navbar.jsx](../components/Navbar.jsx)): same translucent black
@@ -24,6 +25,7 @@ const StatusBar = () => {
             </div>
 
             <div className="status-icons">
+                <SoundToggle size={16} />
                 <time>{now.format("h:mm")}</time>
                 <SignalHigh size={16} />
                 <Wifi size={15} />

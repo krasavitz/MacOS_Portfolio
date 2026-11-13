@@ -60,6 +60,7 @@ const Springboard = () => {
 
     return (
         <div className="springboard">
+
             <div className="springboard-top">
                 {/* The desktop greets visitors with a typed intro; this is the
                     phone's version of it. Tapping it opens About. */}
@@ -79,6 +80,7 @@ const Springboard = () => {
                 <div className="app-grid">
                     {mobileApps.filter((app) => !app.dock).map(renderIcon)}
                 </div>
+
             </div>
 
             <div className="ios-dock">

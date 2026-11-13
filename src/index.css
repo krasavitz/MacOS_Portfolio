@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Caveat:wght@400..700&family=Permanent+Marker&display=swap");
 
 @import "tailwindcss";
 @import "./mobile.css";
@@ -22,15 +22,15 @@ html {
   touch-action: manipulation;
 }
 
-/* Behind every shell. The GIF is centred at no more than its native 800px so
-   the dots stay crisp; on a phone it shrinks to fit the width. Everything
+/* Behind every shell. The horse canvas (see Wallpaper.jsx) is centred at no
+   more than the GIF's native 800px; on a phone it shrinks to fit the width. Everything
    that sits directly on the wallpaper (the intro, icon labels) uses dark ink
    to read against the white. */
 .wallpaper {
   @apply fixed inset-0 -z-10 pointer-events-none bg-white flex-center;
 
-  img {
-    @apply w-[min(800px,100%)] h-auto max-h-full object-contain;
+  canvas {
+    @apply w-[min(800px,100%)] h-auto max-h-full aspect-[4/3];
   }
 
   /* Phone/tablet: the widget and icon grid fill the top of the screen, so
@@ -44,7 +44,7 @@ html {
 
     /* Capped by height too, so short phones (iPhone SE) get a smaller horse
        that clears the icon grid. */
-    img {
+    canvas {
       width: min(560px, 100%, 52dvh);
     }
   }
@@ -93,17 +93,22 @@ html {
   /* Fixed height so #window-bounds can start exactly where the bar ends, and
      above every window so a dragged window slides under it, never over it. */
   #os nav {
-    @apply relative z-[5000] h-11 flex justify-between items-center bg-black/85 backdrop-blur-3xl px-5 select-none text-zinc-100;
+    @apply relative z-[5000] h-11 flex justify-between items-center bg-[#1d1d1e] px-5 select-none text-zinc-100;
+    /* The same woodland camo as the window title bars, a shade darker. */
+    background-image: url("/images/textures/camo-bar.jpg");
+    background-size: 256px 256px;
 
     /* The mark's viewBox is cropped to the artwork, so this is its real size. */
     img {
       @apply w-6 h-6 shrink-0;
     }
 
-    div {
+    /* The bar's two groups (brand + links, then clock). Scoped to direct
+       children so the fringe hanging off the bar isn't laid out as one. */
+    > div:not(.fringe) {
       @apply flex items-center max-sm:w-full max-sm:justify-center gap-5;
 
-      &:last-child {
+      &:nth-child(2) {
         @apply max-sm:hidden;
       }
     }
@@ -121,11 +126,17 @@ html {
       @apply text-sm font-medium text-zinc-100;
     }
 
+    /* Background-music speaker (features/vibe/SoundToggle.jsx). */
+    .sound-toggle {
+      @apply flex-center size-7 -mx-2 rounded-md cursor-pointer transition-colors;
+      @apply hover:bg-white/15 active:bg-white/25;
+    }
+
     /* Reads as a button, not another menu-bar label. */
     .simple-link {
       @apply text-xs cursor-pointer rounded-full px-3 py-1;
       @apply border border-white/30 bg-white/5 transition-colors;
-      @apply hover:bg-[var(--pink)] hover:border-[var(--pink)] hover:text-white;
+      @apply hover:bg-white hover:border-white hover:text-zinc-900;
       @apply no-underline;
     }
   }
@@ -136,41 +147,86 @@ html {
     @apply p-1 hover:bg-white/10 rounded hover:cursor-default;
   }
 
+  /* The desktop intro (Welcome.jsx): the bracelet under the horse, and a
+     sticky note in the bottom-left. Hidden on phones, which have their own. */
   #welcome {
-    /* Parked bottom-left (clear of the centered dock) so open windows own the
-       middle of the desktop. Mobile still centers the small-screen notice. */
-    @apply text-zinc-800 flex flex-col justify-end items-start absolute bottom-28 left-10 select-none max-sm:inset-0 max-sm:bottom-auto max-sm:left-auto max-sm:h-screen max-sm:w-full max-sm:px-10 max-sm:justify-center max-sm:items-center;
+    @apply absolute inset-0 pointer-events-none select-none max-sm:hidden;
 
-    /* A short typed intro, not a shell session. Sits directly on the animated
-       wallpaper, so every line carries a dark shadow and the block gets a soft
-       scrim to stay legible over bright frames. */
-    .boot {
-      @apply text-left w-[min(60vw,34rem)] max-sm:hidden;
-      @apply relative p-5 -m-5 rounded-xl;
+    /* Centred under the horse (the wallpaper canvas is centred, the horse
+       sits in its middle); the tacks sit near the canvas edge. */
+    .boot-bracelet {
+      @apply absolute left-1/2 -translate-x-1/2 pointer-events-auto;
+      top: calc(50% + min(150px, 17vw));
     }
 
-    .boot-line {
-      @apply flex items-baseline gap-2 text-[15px] leading-7 invisible text-zinc-700;
+    .sticky-note {
+      /* Pinned by its top edge, so opening unfolds it downward. Folded, its
+         bottom sits about 7rem above the screen's bottom edge. */
+      @apply absolute left-10 pointer-events-auto invisible text-left;
+      top: calc(100% - 15rem);
+      @apply flex flex-col gap-2 w-64 px-5 pt-6 pb-4 cursor-pointer;
+      background: linear-gradient(180deg, #fff3a6 0%, #ffe97a 100%);
+      color: #2a2414;
+      font-family: "Caveat", "Bradley Hand", "Segoe Print", cursive;
+      border-radius: 2px 2px 14px 2px;
+      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08), 0 12px 24px -10px rgba(60, 45, 0, 0.45);
+      transform-origin: top left;
+      transition: box-shadow 0.2s ease;
 
-      &.is-lead {
-        @apply text-3xl leading-tight font-semibold text-zinc-950 mb-3;
+      &:hover {
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08), 0 18px 30px -10px rgba(60, 45, 0, 0.5);
       }
 
-      &.is-hint {
-        @apply mt-5 text-xs text-zinc-500;
+      /* The intro unfolds under the greeting: its row grows from 0 to its
+         natural height, and the text fades in as it does. Width never
+         changes, so nothing reflows. */
+      .note-body {
+        display: grid;
+        grid-template-rows: 0fr;
+        opacity: 0;
+        transition: grid-template-rows 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s ease;
+      }
+
+      .note-body > .note-text {
+        overflow: hidden;
+        min-height: 0;
+      }
+
+      &.is-open .note-body {
+        grid-template-rows: 1fr;
+        opacity: 1;
+        transition: grid-template-rows 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.35s ease 0.1s;
       }
     }
 
-    .boot-text {
-      &.is-muted {
-        @apply text-zinc-700;
-      }
+    /* A strip of translucent tape holding the note up. */
+    .note-tape {
+      @apply absolute -top-2.5 left-1/2 -translate-x-1/2 w-20 h-5 -rotate-3;
+      background: rgba(255, 255, 255, 0.55);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
     }
 
-    .boot-cursor {
-      @apply inline-block w-[10px] h-[22px] ml-1 translate-y-[2px] bg-[var(--pink)] invisible;
+    .note-title {
+      @apply text-[26px] font-bold leading-none;
+    }
+
+    .note-text {
+      @apply text-[19px] leading-[1.2];
+    }
+
+    .note-hint {
+      @apply mt-1 self-end text-[16px] opacity-60;
+    }
+
+    /* Smaller laptops: a touch smaller. */
+    @media (max-width: 1279px) {
+      .sticky-note {
+        scale: 0.88;
+        transform-origin: top left;
+      }
     }
   }
+
 
   /* Rendered outside #dock so it isn't trapped in the dock's stacking context;
      high z keeps it above open windows. */
@@ -231,14 +287,20 @@ html {
     @apply absolute bottom-5 left-1/2 -translate-x-1/2 z-[5000] select-none max-sm:hidden;
 
     .dock-container {
-      @apply bg-black/5 border border-black/10 backdrop-blur-md justify-between rounded-2xl p-1.5 flex items-end gap-1.5;
+      @apply relative bg-black/5 border border-black/10 backdrop-blur-md justify-between rounded-2xl p-1.5 flex items-end gap-1.5;
+      /* A faint racing-flag checkerboard behind the icons. */
+      background-image: repeating-conic-gradient(rgba(0, 0, 0, 0.07) 0 25%, transparent 0 50%);
+      background-size: 14px 14px;
     }
 
     .dock-icon {
       @apply size-14 3xl:size-20 cursor-pointer;
 
+      /* The dot-matrix icons (public/images/app-icons) fill their whole
+         square, so they're inset a little to leave a gap between them. */
       img {
         @apply object-cover object-center;
+        scale: 0.88;
       }
     }
 
@@ -280,6 +342,10 @@ html {
 
   #window-header {
     @apply flex shrink-0 items-center justify-between px-4 py-3 rounded-t-lg bg-[#2c2c2e] border-b border-[#3a3a3c] select-none text-sm text-zinc-400;
+    /* Dark-on-dark woodland camo (public/images/textures): there if you
+       look, quiet if not. */
+    background-image: url("/images/textures/camo-dark.jpg");
+    background-size: 256px 256px;
   }
 
   #safari {
@@ -297,11 +363,11 @@ html {
       @apply bg-[#1c1c1e] p-10 w-full max-w-3xl mx-auto max-h-[calc(100dvh-15rem)] overflow-y-auto;
 
       h2 {
-        @apply text-xl font-bold text-[#ff5c9d];
+        @apply text-xl font-bold text-white;
       }
 
       .subtitle {
-        @apply text-sm text-zinc-400 mt-1 mb-8;
+        @apply text-sm font-semibold text-zinc-300 mt-1 mb-8;
       }
 
       .bookmark-grid {
@@ -309,7 +375,7 @@ html {
       }
 
       .bookmark {
-        @apply flex items-center gap-3 p-3 rounded-lg border border-[#3a3a3c] bg-[#2c2c2e] transition-colors hover:border-[#ff5c9d]/60 hover:bg-white/5;
+        @apply flex items-center gap-3 p-3 rounded-lg border border-[#3a3a3c] bg-[#2c2c2e] transition-colors hover:border-white/40 hover:bg-white/5;
 
         .tile {
           @apply size-10 shrink-0 rounded-lg flex items-center justify-center text-white font-bold text-lg select-none;
@@ -324,7 +390,7 @@ html {
         }
 
         .host {
-          @apply text-xs text-[#ff5c9d] truncate;
+          @apply text-xs font-semibold text-white truncate;
         }
 
         .note {
@@ -351,7 +417,7 @@ html {
       @apply mb-7;
 
       .eyebrow {
-        @apply font-roboto text-[10px] tracking-[0.35em] text-[var(--pink)] mb-3;
+        @apply font-roboto font-bold text-[10px] tracking-[0.35em] text-white mb-3;
       }
 
       h3 {
@@ -367,10 +433,10 @@ html {
     .skill-card {
       @apply relative rounded-xl p-4 bg-white/[0.03] min-w-0;
       @apply transition-colors duration-300 hover:bg-white/[0.06];
-      border: 1px solid color-mix(in srgb, var(--pink) 25%, transparent);
+      border: 1px solid rgba(255, 255, 255, 0.16);
 
       &:hover {
-        border-color: color-mix(in srgb, var(--pink) 50%, transparent);
+        border-color: rgba(255, 255, 255, 0.34);
       }
 
       .card-top {
@@ -378,7 +444,7 @@ html {
       }
 
       .index {
-        @apply font-roboto text-[11px] tracking-widest text-[var(--pink)];
+        @apply font-roboto font-bold text-[11px] tracking-widest text-white;
       }
 
       h4 {
@@ -402,7 +468,7 @@ html {
         }
 
         .sep {
-          color: color-mix(in srgb, var(--pink) 55%, transparent);
+          color: rgba(255, 255, 255, 0.55);
         }
       }
     }
@@ -431,7 +497,7 @@ html {
       }
 
       .contact-role {
-        @apply mt-0.5 font-roboto text-[10px] tracking-[0.2em] text-[var(--pink)];
+        @apply mt-0.5 font-roboto font-bold text-[10px] tracking-[0.2em] text-white;
       }
     }
 
@@ -514,12 +580,13 @@ html {
       ul {
         @apply space-y-1;
 
+        /* Selected: white text and icon on a light pill. */
         .active {
-          @apply bg-[#ff5c9d]/15 text-[#ff5c9d];
+          @apply bg-white/12 text-white ring-1 ring-white/10;
 
           img,
           img.sys-icon {
-            filter: var(--pink-filter);
+            filter: brightness(0) invert(1);
           }
         }
 
@@ -587,9 +654,6 @@ html {
         @apply text-2xl font-semibold text-zinc-100 tracking-tight;
       }
 
-      .about-role {
-        @apply mt-1 font-roboto text-[11px] tracking-[0.2em] text-[var(--pink)];
-      }
 
       /* Label/value rows rather than chips — reads as a masthead credit block. */
       .about-meta {
@@ -600,7 +664,7 @@ html {
         }
 
         dt {
-          @apply w-16 shrink-0 font-roboto text-[10px] tracking-widest text-zinc-500;
+          @apply w-16 shrink-0 font-roboto font-bold text-[10px] tracking-widest text-zinc-400;
         }
 
         dd {
@@ -623,10 +687,15 @@ html {
       @apply flex-1 min-h-0 p-8 bg-[#1c1c1e] overflow-y-auto text-zinc-200;
     }
 
+    /* The Archive's patch board fills the pane instead of scrolling. */
+    .patch-content {
+      @apply p-3 overflow-hidden flex;
+    }
+
     /* Section label separating the University folders from the rest of Work. */
     .group-label {
       @apply mt-9 mb-5 flex items-center gap-3;
-      @apply font-roboto text-[10px] tracking-[0.25em] text-zinc-500;
+      @apply font-roboto font-bold text-[10px] tracking-[0.25em] text-zinc-400;
 
       &::after {
         content: "";
@@ -654,22 +723,25 @@ html {
 
         /* Locally rendered PDF first page, cropped square from the top so the
            document's header is what shows — matches the Cloudinary thumbs. */
+        /* Dark behind the page, not white: at the rounded corners the
+           backing shows through the anti-aliased edge, and the resume is dark. */
         .pdf-thumb {
-          @apply block shrink-0 overflow-hidden rounded-md shadow-sm bg-white;
+          @apply block shrink-0 overflow-hidden rounded-md shadow-sm bg-[#111];
           @apply transition-transform hover:scale-105;
 
           canvas {
             @apply block;
           }
 
+          /* react-pdf sets background-color: white inline on the page. */
           .react-pdf__Document,
           .react-pdf__Page {
-            @apply bg-transparent;
+            @apply !bg-transparent;
           }
         }
 
         p {
-          @apply text-sm text-center font-medium w-full break-words line-clamp-2 leading-snug;
+          @apply text-sm text-center font-medium w-full break-words line-clamp-2 leading-snug select-none;
         }
       }
     }
@@ -690,7 +762,7 @@ html {
       }
 
       .txt-file-subtitle {
-        @apply text-lg font-semibold text-zinc-100;
+        @apply text-lg font-bold text-zinc-100;
       }
 
       /* Prose renders its own wrapper, so the outer space-y never reached the
@@ -704,7 +776,7 @@ html {
          section into the same rhythm as the body copy. */
       .prose-heading {
         @apply flex items-center gap-3 !mt-8 !mb-3 lowercase;
-        @apply font-roboto text-[10px] tracking-[0.25em] text-[var(--pink)];
+        @apply font-roboto font-bold text-[10px] tracking-[0.25em] text-white;
 
         &::after {
           content: "";
@@ -719,8 +791,10 @@ html {
     }
   }
 
+  /* Sized to the picture: as big as the screen allows (up to 1120px wide),
+     centred, so screenshots and mock-ups are readable without maximising. */
   #imgfile {
-    @apply w-xl absolute top-24 left-2/12 bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
+    @apply w-fit min-w-96 max-w-[min(1120px,calc(100vw-6rem))] absolute top-16 inset-x-0 mx-auto bg-[#1c1c1e] shadow-2xl drop-shadow-2xl rounded-xl overflow-hidden;
 
     #window-header {
       p {
@@ -729,10 +803,10 @@ html {
     }
 
     .preview {
-      @apply p-2 bg-[#2c2c2e] flex items-center justify-center max-h-[calc(100dvh-13rem)] overflow-hidden;
+      @apply p-2 bg-[#2c2c2e] flex items-center justify-center max-h-[calc(100dvh-12rem)] overflow-hidden;
 
       img {
-        @apply max-w-full max-h-[calc(100dvh-14rem)] w-auto h-auto object-contain object-center;
+        @apply max-w-full max-h-[calc(100dvh-13rem)] w-auto h-auto object-contain object-center;
       }
 
       video {

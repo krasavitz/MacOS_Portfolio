@@ -8,7 +8,7 @@ import useLocationStore from "#store/location.js";
 
 const Dock = () => {
   const { openWindow, closeWindow, focusWindow, windows, nextZIndex } = useWindowStore();
-  const { activeLocation, setActiveLocation } = useLocationStore();
+  const { path, setActiveLocation } = useLocationStore();
   const dockRef = useRef(null);
 
   useGSAP(() => {
@@ -61,26 +61,29 @@ const Dock = () => {
 }, []);
 
 
-  // An app is "running" when its window is open. Archive has no window of its
-  // own, so it counts as running while the Finder is showing it.
+  // Work and Archive share the Finder window. Which one it's showing is the
+  // root of its breadcrumb, so browsing into a Work subfolder still counts
+  // as Work.
+  const finderShows = (location) =>
+    windows.finder.isOpen && path[0]?.id === locations[location]?.id;
+
+  // An app is "running" when its window is open, or for Work/Archive, when
+  // the Finder is showing their folder.
   const isRunning = ({ id, location }) =>
-    location
-      ? windows.finder.isOpen && activeLocation?.id === locations[location]?.id
-      : !!windows[id]?.isOpen &&
-        // Work and Archive share the Finder; only one of them lights up.
-        !(id === "finder" && activeLocation?.type === "trash");
+    location ? finderShows(location) : !!windows[id]?.isOpen;
 
   const toggleApp = (app) => {
     if(!app.canOpen) return;
 
-    // Apps backed by a location (Archive) point the Finder at it instead of
-    // owning a window. Clicking again while it's already showing closes it.
+    // Apps backed by a location (Work, Archive) point the shared Finder at
+    // their folder. Already showing it: close if in front, else bring forward.
     if(app.location) {
       const target = locations[app.location];
       if(!target) return;
 
-      if(windows.finder.isOpen && activeLocation?.id === target.id) {
-        return closeWindow('finder');
+      if(finderShows(app.location)) {
+        if(windows.finder.zIndex === nextZIndex - 1) return closeWindow('finder');
+        return focusWindow('finder');
       }
 
       setActiveLocation(target);

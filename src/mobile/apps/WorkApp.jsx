@@ -2,6 +2,7 @@ import { ChevronRight, ArrowUpRight } from "lucide-react";
 import { locations } from "#constants";
 import useMobileStore from "#store/mobile.js";
 import { cldThumbFromUrl } from "#utils/cloudinary.js";
+import PatchBoard from "#features/vibe/PatchBoard.jsx";
 
 /* The row icon, matching the desktop Finder ([Finder.jsx](../../windows/Finder.jsx)):
    images, PDFs and videos show a real preview — an image's own asset, a PDF's
@@ -45,6 +46,11 @@ const WorkApp = ({ entry }) => {
 
     if (!children.length) {
         return <p className="ios-empty">Nothing in here yet.</p>;
+    }
+
+    // The Archive is a board of patches you can drag around, as on desktop.
+    if (folder.type === "trash") {
+        return <PatchBoard items={children} onOpen={openItem} phone />;
     }
 
     return (
