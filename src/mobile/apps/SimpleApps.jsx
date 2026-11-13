@@ -1,5 +1,7 @@
+import { useCallback, useState } from "react";
 import { techStack, socials, bookmarks, gallery, locations } from "#constants";
 import Prose from "#features/Prose.jsx";
+import { MediaViewer } from "#mobile/apps/ProjectsApp.jsx";
 
 /* The apps that are a thin map over constants, laid out for touch:
    stacked cards and two-column media instead of the desktop's fixed grids. */
@@ -73,24 +75,39 @@ export const BookmarksApp = () => (
     </div>
 );
 
-export const GalleryApp = () => (
-    <ul className="ios-gallery">
-        {gallery.map(({ id, img, alt }) => (
-            <li key={id}>
-                <img
-                    src={img}
-                    alt={alt || `gallery-${id}`}
-                    loading="lazy"
-                    decoding="async"
-                    onError={(e) => {
-                        e.currentTarget.onerror = null;
-                        e.currentTarget.src = "/images/placeholder.svg";
-                    }}
-                />
-            </li>
-        ))}
-    </ul>
-);
+// The viewer's shape for each photo, built once.
+const galleryMedia = gallery.map(({ id, img, alt }) => ({ id, name: alt, alt, imageUrl: img, fileType: "img" }));
+
+/* Photos grid; tap one to see it full screen, then swipe through the rest
+   (the same viewer the project pages use). */
+export const GalleryApp = () => {
+    const [viewing, setViewing] = useState(null);
+    const close = useCallback(() => setViewing(null), []);
+
+    return (
+        <>
+            <ul className="ios-gallery">
+                {gallery.map(({ id, img, alt }, i) => (
+                    <li key={id}>
+                        <button type="button" onClick={() => setViewing(i)} aria-label={`View ${alt || `photo ${id}`}`}>
+                            <img
+                                src={img}
+                                alt=""
+                                loading="lazy"
+                                decoding="async"
+                                onError={(e) => {
+                                    e.currentTarget.onerror = null;
+                                    e.currentTarget.src = "/images/placeholder.svg";
+                                }}
+                            />
+                        </button>
+                    </li>
+                ))}
+            </ul>
+            {viewing !== null && <MediaViewer items={galleryMedia} start={viewing} onClose={close} />}
+        </>
+    );
+};
 
 export const AboutApp = () => {
     const doc = locations.about.children.find((c) => c.fileType === "txt");

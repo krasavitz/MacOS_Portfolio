@@ -113,7 +113,7 @@ export const ProjectsApp = () => {
    closes it rather than the whole project page. Portalled to <body>: the
    sheet it opens from is transformed, which would otherwise trap a fixed
    element inside it and leave the home bar drawn on top. */
-const MediaViewer = ({ items, start, onClose }) => {
+export const MediaViewer = ({ items, start, onClose }) => {
     const track = useRef(null);
     const [index, setIndex] = useState(start);
 

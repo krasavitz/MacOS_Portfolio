@@ -59,15 +59,50 @@
     scrollbar-width: none;
   }
 
+  /* The bracelet, draped over the dock: its cord runs just above the dock
+     and the tassels hang over the dock's top edge. */
+  /* The bracelet, hanging off the bottom of the intro card: two strings
+     run from the card's edge down to the cord's end caps (at 8% and 92%
+     across, 30px down, as Bracelet draws them). Pulled up into the gap
+     above it, and the app grid tucks in under the tassels. */
+  .sb-bracelet {
+    @apply relative z-10 flex justify-center shrink-0 pointer-events-none;
+    margin: -1.75rem auto -1.25rem;
+    width: fit-content;
+
+    &::before,
+    &::after {
+      content: "";
+      @apply absolute top-0 w-[2px] bg-zinc-900 rounded-full;
+      height: 26px;
+    }
+    &::before {
+      left: calc(8% - 1px);
+    }
+    &::after {
+      right: calc(8% - 1px);
+    }
+
+    canvas {
+      @apply pointer-events-auto;
+    }
+  }
+
   /* Intro widget — the phone's answer to the desktop's typed greeting. */
+  /* Drawn in the bracelet's ink style: white paper, a thick black outline
+     with slightly uneven corners so it reads hand-drawn, a hard offset
+     shadow, and the title in the same marker as the bracelet's tiles. */
   .ios-widget {
-    @apply flex items-center gap-4 w-full text-left p-4 rounded-3xl;
-    @apply bg-zinc-900/90 backdrop-blur-xl border border-black/10 shadow-lg shadow-black/15;
+    @apply relative flex items-center gap-4 w-full text-left p-4;
+    @apply bg-white text-zinc-900 border-[2.5px] border-zinc-900;
+    border-radius: 22px 26px 20px 28px / 26px 20px 28px 22px;
+    box-shadow: 4px 5px 0 #18181b;
+    rotate: -0.6deg;
     @apply transition-transform active:scale-[0.98];
 
     img {
       @apply size-16 shrink-0 rounded-full object-cover object-center;
-      @apply ring-2 ring-white/15;
+      @apply border-2 border-zinc-900;
     }
 
     .widget-text {
@@ -75,11 +110,26 @@
     }
 
     .widget-title {
-      @apply text-lg font-semibold leading-tight text-white;
+      @apply text-xl leading-tight text-zinc-900;
+      font-family: "Permanent Marker", cursive;
     }
 
     .widget-body {
-      @apply text-[13px] leading-snug text-zinc-300;
+      @apply text-[13px] leading-snug text-zinc-600 font-medium;
+    }
+
+    /* Short phones (iPhone SE): a tighter card, so the horse below still
+       has room. */
+    @media (max-height: 720px) {
+      @apply py-3 gap-3;
+
+      img {
+        @apply size-14;
+      }
+
+      .widget-body {
+        @apply text-xs;
+      }
     }
 
     @media (min-width: 640px) {
@@ -377,6 +427,10 @@
 
     @media (min-width: 640px) {
       @apply grid-cols-3;
+    }
+
+    button {
+      @apply block w-full rounded-xl transition-transform active:scale-[0.97];
     }
 
     img {

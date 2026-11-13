@@ -922,7 +922,6 @@ const navLinks = [
         icon: "/images/txt.png",
         kind: "file",
         fileType: "txt",
-        subtitle: profile.role,
         image: profile.photo,
         // Same copy the desktop About pane and the /simple About page show —
         // one source, so the three views can't drift.

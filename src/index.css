@@ -42,10 +42,18 @@ html {
        the dock; the horse itself lands just above it. */
     padding-bottom: calc(env(safe-area-inset-bottom) + 2.5rem);
 
+    @media (max-height: 720px) {
+      padding-bottom: calc(env(safe-area-inset-bottom) + 4rem);
+    }
+
     /* Capped by height too, so short phones (iPhone SE) get a smaller horse
        that clears the icon grid. */
     canvas {
       width: min(560px, 100%, 52dvh);
+
+      @media (max-height: 720px) {
+        width: min(100%, 36dvh);
+      }
     }
   }
 }

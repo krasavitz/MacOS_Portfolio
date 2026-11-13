@@ -2,7 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32 48x48" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Phones ignore SVG favicons: iOS uses this for tabs, bookmarks and the
+         home screen, Android the manifest's icons. -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <!-- viewport-fit=cover lets the mobile shell run edge to edge; its CSS
          pads for the notch and home bar with env(safe-area-inset-*). -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
